@@ -1,95 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
   <head>
-    <base target="_top">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_top">
+    <title>Contatto WhatsApp</title>
     <style>
-      :root {
-        --wa-green: #25D366;
-        --wa-dark-green: #128C7E;
-        --bg-color: #f0f2f5;
-      }
       body { 
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-        background-color: var(--bg-color); 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        background-color: #f0f2f5; 
         display: flex; 
         justify-content: center; 
         align-items: center;
-        min-height: 100vh;
+        height: 100vh;
         margin: 0;
+        padding: 20px; 
+        box-sizing: border-box;
       }
       .contact-card { 
         background: white; 
-        padding: 40px; 
-        border-radius: 16px; 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        padding: 30px; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         width: 100%; 
-        max-width: 450px; 
+        max-width: 400px; 
       }
       h2 { 
-        color: var(--wa-dark-green); 
+        color: #25D366; 
         margin-top: 0; 
-        font-size: 24px;
         text-align: center;
-        margin-bottom: 25px;
       }
-      .input-group { margin-bottom: 15px; }
-      label { display: block; margin-bottom: 5px; color: #555; font-size: 14px; }
       input, textarea { 
         width: 100%; 
-        padding: 14px; 
-        border: 1px solid #e1e1e1; 
-        border-radius: 8px; 
+        padding: 12px; 
+        margin: 10px 0 15px 0; 
+        border: 1px solid #ccc; 
+        border-radius: 6px; 
         box-sizing: border-box; 
-        font-size: 16px;
-        transition: border-color 0.3s;
+        font-family: inherit;
+        font-size: 14px;
       }
       input:focus, textarea:focus {
+        border-color: #25D366;
         outline: none;
-        border-color: var(--wa-green);
       }
       button { 
         width: 100%; 
-        padding: 15px; 
-        background-color: var(--wa-green); 
+        padding: 14px; 
+        background-color: #25D366; 
         color: white; 
         border: none; 
-        border-radius: 8px; 
+        border-radius: 6px; 
         cursor: pointer; 
-        font-size: 18px; 
+        font-size: 16px; 
         font-weight: bold; 
-        box-shadow: 0 4px 6px rgba(37, 211, 102, 0.2);
-        transition: transform 0.1s, background-color 0.3s;
+        transition: background-color 0.3s;
       }
-      button:hover { background-color: var(--wa-dark-green); }
-      button:active { transform: scale(0.98); }
-      button:disabled { background-color: #ccc; cursor: not-allowed; }
-      
+      button:hover { 
+        background-color: #128C7E; 
+      }
+      button:disabled {
+        background-color: #9cdbaf;
+        cursor: not-allowed;
+      }
       #status { 
-        margin-top: 20px; 
-        font-size: 15px; 
+        margin-top: 15px; 
+        font-size: 14px; 
         text-align: center; 
-        padding: 10px;
-        border-radius: 6px;
+        font-weight: 500;
       }
-      .loading { color: #666; font-style: italic; }
-      .success { background-color: #dcf8c6; color: #075e54; }
-      .error { background-color: #ffebee; color: #c62828; }
+      .loading { color: #555; }
+      .success { color: #2e7d32; }
+      .error { color: #d32f2f; }
     </style>
   </head>
   <body>
     <div class="contact-card">
       <h2>Invia un messaggio</h2>
       <form id="contactForm">
-        <div class="input-group">
-          <input type="text" name="nome" placeholder="Il tuo nome" required>
-        </div>
-        <div class="input-group">
-          <input type="email" name="email" placeholder="La tua email" required>
-        </div>
-        <div class="input-group">
-          <textarea name="messaggio" rows="4" placeholder="Come posso aiutarti?" required></textarea>
-        </div>
+        <input type="text" name="nome" placeholder="Il tuo nome" required>
+        <input type="email" name="email" placeholder="La tua email" required>
+        <textarea name="messaggio" rows="4" placeholder="Scrivi qui il tuo messaggio..." required></textarea>
         <button type="submit" id="submitBtn">Invia su WhatsApp</button>
       </form>
       <div id="status"></div>
@@ -97,29 +88,37 @@
 
     <script>
       document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Previene il ricaricamento della pagina
+        
         const btn = document.getElementById('submitBtn');
         const status = document.getElementById('status');
         
+        // Stato di caricamento
         btn.disabled = true;
-        status.innerHTML = "🔄 Invio in corso...";
+        btn.innerText = "Invio in corso...";
+        status.innerHTML = "";
         status.className = "loading";
 
-        // Funzione lato server definita in Codice.gs
+        // Chiama la funzione processForm nel file Codice.gs passandogli i dati del form
         google.script.run
-          .withSuccessHandler(function(res) {
-            status.innerHTML = "✅ " + res;
-            status.className = "success";
-            btn.disabled = false;
-            // Se il messaggio contiene "correttamente", resetta il form
-            if(res.toLowerCase().includes("correttamente")) {
+          .withSuccessHandler(function(risposta) {
+            // Gestione del successo o di errori lato server (es. CallMeBot down)
+            status.innerHTML = risposta;
+            if(risposta.includes("correttamente")) {
+              status.className = "success";
               document.getElementById('contactForm').reset();
+            } else {
+              status.className = "error";
             }
+            btn.disabled = false;
+            btn.innerText = "Invia su WhatsApp";
           })
-          .withFailureHandler(function(err) {
-            status.innerHTML = "❌ Errore critico: " + err;
+          .withFailureHandler(function(errore) {
+            // Gestione degli errori critici di Google Apps Script
+            status.innerHTML = "Errore di sistema: " + errore;
             status.className = "error";
             btn.disabled = false;
+            btn.innerText = "Riprova";
           })
           .processForm(this);
       });
