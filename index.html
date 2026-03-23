@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
+      .contact-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+      h2 { color: #25D366; margin-top: 0; }
+      input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+      button { width: 100%; padding: 12px; background-color: #25D366; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
+      button:hover { background-color: #128C7E; }
+      #status { margin-top: 15px; font-size: 14px; text-align: center; }
+      .loading { color: #666; }
+      .success { color: #2e7d32; }
+      .error { color: #d32f2f; }
+    </style>
+  </head>
+  <body>
+    <div class="contact-card">
+      <h2>Scrivimi ora</h2>
+      <form id="contactForm">
+        <input type="text" name="nome" placeholder="Il tuo nome" required>
+        <input type="email" name="email" placeholder="La tua email" required>
+        <textarea name="messaggio" rows="4" placeholder="Come posso aiutarti?" required></textarea>
+        <button type="submit" id="submitBtn">Invia su WhatsApp</button>
+      </form>
+      <div id="status"></div>
+    </div>
+
+    <script>
+      document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('status');
+        
+        btn.disabled = true;
+        status.innerHTML = "Invio in corso...";
+        status.className = "loading";
+
+        // Chiamata alla funzione lato server
+        google.script.run
+          .withSuccessHandler(function(res) {
+            status.innerHTML = res;
+            status.className = "success";
+            btn.disabled = false;
+            if(res.includes("correttamente")) document.getElementById('contactForm').reset();
+          })
+          .withFailureHandler(function(err) {
+            status.innerHTML = "Errore critico: " + err;
+            status.className = "error";
+            btn.disabled = false;
+          })
+          .processForm(this);
+      });
+    </script>
+  </body>
+</html>
