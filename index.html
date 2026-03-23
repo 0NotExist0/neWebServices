@@ -2,26 +2,94 @@
 <html>
   <head>
     <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
-      .contact-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-      h2 { color: #25D366; margin-top: 0; }
-      input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-      button { width: 100%; padding: 12px; background-color: #25D366; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
-      button:hover { background-color: #128C7E; }
-      #status { margin-top: 15px; font-size: 14px; text-align: center; }
-      .loading { color: #666; }
-      .success { color: #2e7d32; }
-      .error { color: #d32f2f; }
+      :root {
+        --wa-green: #25D366;
+        --wa-dark-green: #128C7E;
+        --bg-color: #f0f2f5;
+      }
+      body { 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+        background-color: var(--bg-color); 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+      .contact-card { 
+        background: white; 
+        padding: 40px; 
+        border-radius: 16px; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        width: 100%; 
+        max-width: 450px; 
+      }
+      h2 { 
+        color: var(--wa-dark-green); 
+        margin-top: 0; 
+        font-size: 24px;
+        text-align: center;
+        margin-bottom: 25px;
+      }
+      .input-group { margin-bottom: 15px; }
+      label { display: block; margin-bottom: 5px; color: #555; font-size: 14px; }
+      input, textarea { 
+        width: 100%; 
+        padding: 14px; 
+        border: 1px solid #e1e1e1; 
+        border-radius: 8px; 
+        box-sizing: border-box; 
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+      input:focus, textarea:focus {
+        outline: none;
+        border-color: var(--wa-green);
+      }
+      button { 
+        width: 100%; 
+        padding: 15px; 
+        background-color: var(--wa-green); 
+        color: white; 
+        border: none; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        font-size: 18px; 
+        font-weight: bold; 
+        box-shadow: 0 4px 6px rgba(37, 211, 102, 0.2);
+        transition: transform 0.1s, background-color 0.3s;
+      }
+      button:hover { background-color: var(--wa-dark-green); }
+      button:active { transform: scale(0.98); }
+      button:disabled { background-color: #ccc; cursor: not-allowed; }
+      
+      #status { 
+        margin-top: 20px; 
+        font-size: 15px; 
+        text-align: center; 
+        padding: 10px;
+        border-radius: 6px;
+      }
+      .loading { color: #666; font-style: italic; }
+      .success { background-color: #dcf8c6; color: #075e54; }
+      .error { background-color: #ffebee; color: #c62828; }
     </style>
   </head>
   <body>
     <div class="contact-card">
-      <h2>Scrivimi ora</h2>
+      <h2>Invia un messaggio</h2>
       <form id="contactForm">
-        <input type="text" name="nome" placeholder="Il tuo nome" required>
-        <input type="email" name="email" placeholder="La tua email" required>
-        <textarea name="messaggio" rows="4" placeholder="Come posso aiutarti?" required></textarea>
+        <div class="input-group">
+          <input type="text" name="nome" placeholder="Il tuo nome" required>
+        </div>
+        <div class="input-group">
+          <input type="email" name="email" placeholder="La tua email" required>
+        </div>
+        <div class="input-group">
+          <textarea name="messaggio" rows="4" placeholder="Come posso aiutarti?" required></textarea>
+        </div>
         <button type="submit" id="submitBtn">Invia su WhatsApp</button>
       </form>
       <div id="status"></div>
@@ -34,19 +102,22 @@
         const status = document.getElementById('status');
         
         btn.disabled = true;
-        status.innerHTML = "Invio in corso...";
+        status.innerHTML = "🔄 Invio in corso...";
         status.className = "loading";
 
-        // Chiamata alla funzione lato server
+        // Funzione lato server definita in Codice.gs
         google.script.run
           .withSuccessHandler(function(res) {
-            status.innerHTML = res;
+            status.innerHTML = "✅ " + res;
             status.className = "success";
             btn.disabled = false;
-            if(res.includes("correttamente")) document.getElementById('contactForm').reset();
+            // Se il messaggio contiene "correttamente", resetta il form
+            if(res.toLowerCase().includes("correttamente")) {
+              document.getElementById('contactForm').reset();
+            }
           })
           .withFailureHandler(function(err) {
-            status.innerHTML = "Errore critico: " + err;
+            status.innerHTML = "❌ Errore critico: " + err;
             status.className = "error";
             btn.disabled = false;
           })
