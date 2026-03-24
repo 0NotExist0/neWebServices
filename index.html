@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base target="_top">
     <title>Contatto WhatsApp</title>
     <style>
       body { 
@@ -88,39 +87,55 @@
 
     <script>
       document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Previene il ricaricamento della pagina
+        e.preventDefault(); 
         
         const btn = document.getElementById('submitBtn');
         const status = document.getElementById('status');
         
-        // Stato di caricamento
+        // Mette il form in stato di caricamento
         btn.disabled = true;
         btn.innerText = "Invio in corso...";
         status.innerHTML = "";
         status.className = "loading";
 
-        // Chiama la funzione processForm nel file Codice.gs passandogli i dati del form
-        google.script.run
-          .withSuccessHandler(function(risposta) {
-            // Gestione del successo o di errori lato server (es. CallMeBot down)
-            status.innerHTML = risposta;
-            if(risposta.includes("correttamente")) {
+        // IL TUO LINK GOOGLE SCRIPT DEFINITIVO
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyDCIFmqKAmWLjPtQ-v7643WXCrd_tglKYHvrXZNFggpyYNJ8tFQOYrek7HDZaVu84C/exec'; 
+        
+        const formData = new FormData(this);
+
+        // Invia i dati al backend di Google
+        fetch(scriptURL, { 
+            method: 'POST', 
+            body: formData 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Errore di rete");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data.status === "success") {
+              // Messaggio inviato con successo
+              status.innerHTML = data.text;
               status.className = "success";
               document.getElementById('contactForm').reset();
             } else {
+              // Errore restituito da Google Script
+              status.innerHTML = "Errore dal server: " + data.text;
               status.className = "error";
             }
             btn.disabled = false;
             btn.innerText = "Invia su WhatsApp";
-          })
-          .withFailureHandler(function(errore) {
-            // Gestione degli errori critici di Google Apps Script
-            status.innerHTML = "Errore di sistema: " + errore;
+        })
+        .catch(error => {
+            // Errore di connessione
+            console.error("Dettaglio Errore:", error);
+            status.innerHTML = "Errore di connessione. Riprova più tardi.";
             status.className = "error";
             btn.disabled = false;
             btn.innerText = "Riprova";
-          })
-          .processForm(this);
+        });
       });
     </script>
   </body>
