@@ -97,8 +97,8 @@
         status.innerHTML = "";
         status.className = "loading";
 
-        // Il tuo nuovo link della Versione 4
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxgRWNu6zNSeHHghnzIVJ3nmEmqoLo2-tBPWgQeWgPiABPhrdFfHi536pia3qPE2HQm/exec'; 
+        // Il tuo nuovo link della Versione 5
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzKWwokejOHOHqgZPtUOukAOoC8ZoEclQDIscMVm4KL6NgCn60-hkEI2Fkzuzs9XqGf/exec'; 
         
         const formData = new FormData(this);
 
@@ -116,7 +116,6 @@
               status.className = "success";
               document.getElementById('contactForm').reset();
             } else {
-              // Ora il testo dell'errore includerà esattamente la risposta di CallMeBot!
               status.innerHTML = data.text;
               status.className = "error";
             }
