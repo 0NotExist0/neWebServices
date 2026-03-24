@@ -97,17 +97,24 @@
         status.innerHTML = "";
         status.className = "loading";
 
-        // Il tuo nuovo link della Versione 5
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzKWwokejOHOHqgZPtUOukAOoC8ZoEclQDIscMVm4KL6NgCn60-hkEI2Fkzuzs9XqGf/exec'; 
+        // Il link esatto della tua Versione 6
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxhAPZVyp1vHgVcQQxCXDDc8UES1Jwn1WDkgdlqBoG-kRgSOVbUwODgz4c6GZoti8Y2/exec'; 
         
+        // Estraiamo i dati dal form in modo leggibile per Google Apps Script
         const formData = new FormData(this);
+        const dataParams = new URLSearchParams();
+        for (const pair of formData) {
+            dataParams.append(pair[0], pair[1]);
+        }
 
         fetch(scriptURL, { 
             method: 'POST', 
-            body: formData 
+            // Diciamo a Google esplicitamente che tipo di dati stiamo mandando
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: dataParams
         })
         .then(response => {
-            if (!response.ok) throw new Error("Errore di rete");
+            if (!response.ok) throw new Error("Errore di rete HTTP: " + response.status);
             return response.json();
         })
         .then(data => {
