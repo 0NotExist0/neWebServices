@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Atelier Boutique | Vendita Vestiti & Capi di Tendenza",
-  description: "E-commerce sartoriale di abbigliamento sincronizzato con cartelle Google Drive.",
+  title: "NotExistShoppingPlace | Negozio Vestiti & Moda by 0Not_Exist0",
+  description: "E-commerce ufficiale NotExistShoppingPlace by 0Not_Exist0, sincronizzato in tempo reale con Google Drive.",
 };
 
 export default function RootLayout({

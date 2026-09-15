@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul
-title Atelier Boutique - Build di Produzione
+title NotExistShoppingPlace by 0Not_Exist0 - Build Produzione
 color 0B
 
 echo ================================================================
-echo           COMPILAZIONE PRODUZIONE (NEXT.JS BUILD)
+echo     NOTEXISTSHOPPINGPLACE - COMPILAZIONE PRODUZIONE VERCEL
 echo ================================================================
 echo.
 echo Avvio compilazione per verificare che tutto sia pronto per Vercel...

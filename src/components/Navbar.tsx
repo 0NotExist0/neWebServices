@@ -76,11 +76,13 @@ export default function Navbar() {
                 onClick={() => handleSelectCategory('all')}
                 className="text-left group cursor-pointer focus:outline-hidden"
               >
-                <span className="font-serif text-2xl sm:text-3xl font-bold tracking-widest text-neutral-900 uppercase block group-hover:opacity-80 transition-opacity">
-                  Atelier
-                </span>
-                <span className="text-[10px] tracking-[0.3em] font-sans text-neutral-500 uppercase block -mt-1">
-                  Moda & Collezione
+                <div className="flex items-baseline gap-1">
+                  <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 group-hover:opacity-80 transition-opacity">
+                    NotExist<span className="text-amber-600 font-light">ShoppingPlace</span>
+                  </span>
+                </div>
+                <span className="text-[9px] tracking-[0.25em] font-sans font-medium text-neutral-500 uppercase block">
+                  Couture • by 0Not_Exist0
                 </span>
               </button>
             </div>

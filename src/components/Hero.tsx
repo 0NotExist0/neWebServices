@@ -20,7 +20,7 @@ export default function Hero() {
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-neutral-300 text-xs font-medium tracking-wide mb-6 backdrop-blur-sm border border-white/15">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Nuova Collezione • Connesso a Google Drive</span>
+            <span>NotExistShoppingPlace • by 0Not_Exist0</span>
           </div>
 
           <h1 className="font-serif text-4xl sm:text-6xl font-light tracking-tight leading-tight text-white mb-6">
@@ -29,8 +29,7 @@ export default function Hero() {
           </h1>
 
           <p className="text-neutral-300 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl font-light">
-            Esplora il nostro catalogo esclusivo sincronizzato in tempo reale con le cartelle del nostro atelier. 
-            Capi sartoriali, tessuti pregiati e look selezionati per ogni occasione.
+            Esplora il catalogo esclusivo di <strong className="text-white font-medium">NotExistShoppingPlace</strong>, curato da <strong className="text-amber-200 font-medium">0Not_Exist0</strong> e sincronizzato in tempo reale con Google Drive.
           </p>
 
           <div className="flex flex-wrap items-center gap-4">

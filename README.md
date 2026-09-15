@@ -1,6 +1,6 @@
-# 👗 Atelier Boutique - E-Commerce Abbigliamento con Google Drive Sync
+# 👗 NotExistShoppingPlace - by 0Not_Exist0
 
-Un sito web moderno, elegante e reattivo per la vendita di abiti e capi d'abbigliamento, pronto per essere caricato su **GitHub** e distribuito in un clic su **Vercel**.
+E-Commerce esclusivo di abbigliamento per **NotExistShoppingPlace** curato da **0Not_Exist0**, sincronizzato in automatico con **Google Drive**, pronto per il deploy su **GitHub** e l'hosting su **Vercel**.
 
 Il sito è collegato direttamente a **Google Drive** tramite API Key:
 - **Menu Categorie Automatici**: ogni sottocartella su Google Drive diventa automaticamente una voce di menu/categoria navigabile con conteggio dei capi!

@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul
-title Atelier Boutique - Server di Sviluppo
+title NotExistShoppingPlace by 0Not_Exist0 - Dev Server
 color 0A
 
 echo ================================================================
-echo           ATELIER BOUTIQUE - SITO VENDITA VESTITI
+echo       NOTEXISTSHOPPINGPLACE - BY 0NOT_EXIST0 (DRIVE SHOP)
 echo ================================================================
 echo.
 echo [1/3] Verifica ambiente Node.js...

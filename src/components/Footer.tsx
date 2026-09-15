@@ -79,11 +79,14 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="space-y-4 md:col-span-1">
-            <span className="font-serif text-2xl font-bold tracking-widest text-white uppercase block">
-              Atelier
+            <span className="font-serif text-2xl font-bold tracking-tight text-white block">
+              NotExist<span className="text-amber-400 font-light">ShoppingPlace</span>
+            </span>
+            <span className="text-[10px] tracking-[0.2em] font-sans font-medium text-neutral-400 uppercase block -mt-2">
+              by 0Not_Exist0
             </span>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Boutique sartoriale contemporanea. Capi esclusivi selezionati con cura e gestiti direttamente dal nostro archivio digitale su Google Drive.
+              Boutique esclusiva firmata 0Not_Exist0. Capi selezionati con passione e gestiti direttamente dal nostro archivio digitale su Google Drive.
             </p>
             <div className="pt-2">
               <button
@@ -163,7 +166,7 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-neutral-900 text-center text-xs text-neutral-500 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p>&copy; Atelier Boutique. Tutti i diritti riservati.</p>
+        <p>&copy; {new Date().getFullYear()} NotExistShoppingPlace by 0Not_Exist0. Tutti i diritti riservati.</p>
         <p className="flex items-center gap-1.5">
           <span>Pronto per il deploy su</span>
           <strong className="text-neutral-300">GitHub &amp; Vercel</strong>
