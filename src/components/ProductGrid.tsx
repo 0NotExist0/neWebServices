@@ -4,7 +4,15 @@ import React, { useState, useMemo } from 'react';
 import { useShop } from '@/context/ShopContext';
 import ProductCard from './ProductCard';
 import CategoryFilter from './CategoryFilter';
-import { SearchX, HardDrive } from 'lucide-react';
+import {
+  SearchX,
+  HardDrive,
+  FolderPlus,
+  ExternalLink,
+  RefreshCw,
+  Sparkles,
+  Eye,
+} from 'lucide-react';
 
 export default function ProductGrid() {
   const {
@@ -15,10 +23,24 @@ export default function ProductGrid() {
     setSearchQuery,
     isLoading,
     isDemo,
+    isEmptyDrive,
+    driveFolderName,
+    showDemoFallback,
+    setShowDemoFallback,
+    refreshCatalog,
     setIsConfigOpen,
   } = useShop();
 
   const [sortBy, setSortBy] = useState('default');
+
+  const rootFolderId =
+    process.env.NEXT_PUBLIC_GOOGLE_DRIVE_ROOT_FOLDER_ID ||
+    (typeof window !== 'undefined' ? localStorage.getItem('drive_root_folder_id') : '') ||
+    '';
+
+  const driveUrl = rootFolderId
+    ? `https://drive.google.com/drive/folders/${rootFolderId}`
+    : 'https://drive.google.com';
 
   const filteredProducts = useMemo(() => {
     return products
@@ -43,32 +65,131 @@ export default function ProductGrid() {
 
   return (
     <section id="catalog-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      {isDemo && (
-        <div className="mb-10 p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-xl bg-amber-100 text-amber-800 shrink-0">
-              <HardDrive className="w-5 h-5" />
+      
+      {/* 1. Schermata Drive Connesso ma Attualmente Vuoto (Onboarding immediato) */}
+      {isEmptyDrive && !showDemoFallback && (
+        <div className="mb-12 bg-white rounded-3xl border border-neutral-200 p-6 sm:p-10 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-amber-100/50 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+
+          <div className="max-w-3xl relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-semibold tracking-wide mb-4">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <span>Google Drive Connesso con Successo!</span>
             </div>
-            <div>
-              <h4 className="text-sm font-semibold text-amber-950">
-                Modalità Dimostrativa Attiva (Vestiti di Esempio)
-              </h4>
-              <p className="text-xs text-amber-800 mt-0.5 leading-relaxed">
-                I capi mostrati qui sotto sono dimostrativi. Collega la tua API Key di Google Drive e la cartella per caricare istantaneamente le tue foto con i tuoi menu!
-              </p>
+
+            <h3 className="font-serif text-2xl sm:text-4xl font-bold text-neutral-900 leading-tight">
+              La cartella <span className="text-amber-800">&ldquo;{driveFolderName}&rdquo;</span> è collegata ed è pronta.
+            </h3>
+
+            <p className="text-sm sm:text-base text-neutral-600 mt-3 leading-relaxed">
+              La chiave API funziona perfettamente! La cartella è al momento vuota: segui questi 3 passaggi per popolare il tuo negozio:
+            </p>
+
+            {/* Passaggi visuali */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8">
+              <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-100">
+                <div className="w-8 h-8 rounded-full bg-neutral-900 text-white font-bold text-xs flex items-center justify-center mb-3">
+                  1
+                </div>
+                <h5 className="font-bold text-xs text-neutral-900 uppercase tracking-wider mb-1">
+                  Crea i Menu
+                </h5>
+                <p className="text-xs text-neutral-600 leading-relaxed">
+                  Dentro la cartella crea le sottocartelle (es. <em>Abiti</em>, <em>Giacche</em>, <em>Pantaloni</em>). Diventeranno le categorie del menu!
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-100">
+                <div className="w-8 h-8 rounded-full bg-neutral-900 text-white font-bold text-xs flex items-center justify-center mb-3">
+                  2
+                </div>
+                <h5 className="font-bold text-xs text-neutral-900 uppercase tracking-wider mb-1">
+                  Carica le Foto
+                </h5>
+                <p className="text-xs text-neutral-600 leading-relaxed">
+                  Trascina le foto dei vestiti dentro ciascuna sottocartella (JPG, PNG o WEBP).
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-100">
+                <div className="w-8 h-8 rounded-full bg-neutral-900 text-white font-bold text-xs flex items-center justify-center mb-3">
+                  3
+                </div>
+                <h5 className="font-bold text-xs text-neutral-900 uppercase tracking-wider mb-1">
+                  Nome &amp; Prezzo
+                </h5>
+                <p className="text-xs text-neutral-600 leading-relaxed">
+                  Rinomina il file indicando il prezzo (es. <code>Vestito Lino - 49.90.jpg</code>). Il sito farà il resto!
+                </p>
+              </div>
+            </div>
+
+            {/* Pulsanti Azione */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <a
+                href={driveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-semibold flex items-center gap-2 shadow-md transition-all cursor-pointer"
+              >
+                <FolderPlus className="w-4 h-4 text-amber-400" />
+                <span>Apri Cartella su Google Drive</span>
+                <ExternalLink className="w-3 h-3 opacity-70" />
+              </a>
+
+              <button
+                onClick={() => refreshCatalog()}
+                disabled={isLoading}
+                className="px-5 py-3 border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer shadow-xs disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-amber-600' : ''}`} />
+                <span>{isLoading ? 'Rilevamento in corso...' : 'Ricarica da Google Drive'}</span>
+              </button>
+
+              <button
+                onClick={() => setShowDemoFallback(true)}
+                className="px-4 py-3 text-xs text-neutral-600 hover:text-neutral-900 underline flex items-center gap-1.5 cursor-pointer ml-auto"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span>Mostra capi di esempio nel frattempo</span>
+              </button>
             </div>
           </div>
-          <button
-            onClick={() => setIsConfigOpen(true)}
-            className="px-4 py-2 bg-amber-900 hover:bg-neutral-900 text-white rounded-xl text-xs font-semibold tracking-wide transition-colors whitespace-nowrap shadow-xs cursor-pointer"
-          >
-            Collega il tuo Drive
-          </button>
         </div>
       )}
 
-      <CategoryFilter sortBy={sortBy} setSortBy={setSortBy} />
+      {/* Banner se ha attivato la visualizzazione dei capi demo mentre prepara il drive */}
+      {isEmptyDrive && showDemoFallback && (
+        <div className="mb-8 p-4 rounded-2xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-amber-950">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>
+              Stai visualizzando i capi dimostrativi. La tua cartella Drive <strong>&ldquo;{driveFolderName}&rdquo;</strong> è pronta e in attesa delle tue prime foto.
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => refreshCatalog()}
+              className="px-3 py-1.5 bg-neutral-900 text-white rounded-lg font-semibold hover:bg-neutral-800 transition-colors cursor-pointer"
+            >
+              Verifica Nuove Foto
+            </button>
+            <button
+              onClick={() => setShowDemoFallback(false)}
+              className="px-3 py-1.5 border border-amber-300 text-amber-900 rounded-lg hover:bg-amber-100 transition-colors cursor-pointer"
+            >
+              Nascondi Demo
+            </button>
+          </div>
+        </div>
+      )}
 
+      {/* Categorie e Filtri */}
+      {(products.length > 0 || !isEmptyDrive) && (
+        <CategoryFilter sortBy={sortBy} setSortBy={setSortBy} />
+      )}
+
+      {/* Loading Skeleton */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => (
@@ -82,7 +203,7 @@ export default function ProductGrid() {
             </div>
           ))}
         </div>
-      ) : filteredProducts.length === 0 ? (
+      ) : filteredProducts.length === 0 && !isEmptyDrive ? (
         <div className="text-center py-20 px-4 bg-neutral-50 rounded-3xl border border-dashed border-neutral-200">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400">
             <SearchX className="w-8 h-8" />

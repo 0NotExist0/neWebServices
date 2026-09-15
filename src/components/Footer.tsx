@@ -7,13 +7,20 @@ import {
   MessageCircle,
   Truck,
   RotateCcw,
+  Clock,
 } from 'lucide-react';
 
 export default function Footer() {
-  const { folders, setSelectedFolderId, setIsConfigOpen, isDemo } = useShop();
+  const {
+    folders,
+    setSelectedFolderId,
+    setIsConfigOpen,
+    isDemo,
+    isWhatsAppAvailable,
+    whatsAppNumber,
+  } = useShop();
 
-  const whatsappPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+393400000000';
-  const whatsappClean = whatsappPhone.replace(/[^0-9]/g, '');
+  const cleanPhone = (whatsAppNumber || '').replace(/[^0-9]/g, '');
 
   const scrollToCatalog = (folderId: string) => {
     setSelectedFolderId(folderId);
@@ -50,8 +57,10 @@ export default function Footer() {
               <MessageCircle className="w-6 h-6" />
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-white">Assistenza WhatsApp</h5>
-              <p className="text-xs text-neutral-400 mt-0.5">Consigli su taglie e disponibilità</p>
+              <h5 className="text-sm font-semibold text-white">Assistenza Dedicata</h5>
+              <p className="text-xs text-neutral-400 mt-0.5">
+                {isWhatsAppAvailable ? 'Supporto rapido via WhatsApp' : 'Assistenza ordini e taglie'}
+              </p>
             </div>
           </div>
 
@@ -74,7 +83,7 @@ export default function Footer() {
               Atelier
             </span>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Boutique sartoriale contemporanea. Capi esclusivi selezionati con passione e gestiti direttamente dal nostro archivio digitale su Google Drive.
+              Boutique sartoriale contemporanea. Capi esclusivi selezionati con cura e gestiti direttamente dal nostro archivio digitale su Google Drive.
             </p>
             <div className="pt-2">
               <button
@@ -119,7 +128,7 @@ export default function Footer() {
               Servizio Clienti
             </h4>
             <ul className="space-y-2 text-xs text-neutral-400">
-              <li><span className="hover:text-white transition-colors cursor-pointer">Spedizioni & Tariffe</span></li>
+              <li><span className="hover:text-white transition-colors cursor-pointer">Spedizioni &amp; Tariffe</span></li>
               <li><span className="hover:text-white transition-colors cursor-pointer">Politica di Reso</span></li>
               <li><span className="hover:text-white transition-colors cursor-pointer">Guida alle Taglie</span></li>
               <li><span className="hover:text-white transition-colors cursor-pointer">Domande Frequenti (FAQ)</span></li>
@@ -131,17 +140,24 @@ export default function Footer() {
               Contatti Rapidi
             </h4>
             <p className="text-xs text-neutral-400 leading-relaxed">
-              Hai una domanda su un capo o preferisci ordinare direttamente con il nostro staff?
+              Hai una domanda su un capo o desideri informazioni sui tuoi ordini?
             </p>
-            <a
-              href={`https://wa.me/${whatsappClean}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>Scrivici su WhatsApp</span>
-            </a>
+            {isWhatsAppAvailable ? (
+              <a
+                href={`https://wa.me/${cleanPhone}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Scrivici su WhatsApp</span>
+              </a>
+            ) : (
+              <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-400 text-xs font-medium">
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <span>WhatsApp: Coming Soon</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

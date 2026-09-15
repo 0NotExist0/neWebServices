@@ -23,6 +23,10 @@ interface ShopContextType {
   setSearchQuery: (query: string) => void;
 
   isDemo: boolean;
+  isEmptyDrive: boolean;
+  driveFolderName: string;
+  showDemoFallback: boolean;
+  setShowDemoFallback: (show: boolean) => void;
   isLoading: boolean;
   catalogError: string | null;
   refreshCatalog: (customKey?: string, customFolderId?: string) => Promise<void>;
@@ -32,6 +36,9 @@ interface ShopContextType {
 
   isConfigOpen: boolean;
   setIsConfigOpen: (open: boolean) => void;
+
+  isWhatsAppAvailable: boolean;
+  whatsAppNumber: string;
 }
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -42,13 +49,25 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
-  const [folders, setFolders] = useState<DriveFolder[]>(DEMO_FOLDERS);
-  const [products, setProducts] = useState<Product[]>(DEMO_PRODUCTS);
+  const [folders, setFolders] = useState<DriveFolder[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedFolderId, setSelectedFolderId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isDemo, setIsDemo] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
+  const [isEmptyDrive, setIsEmptyDrive] = useState(false);
+  const [driveFolderName, setDriveFolderName] = useState('Google Drive');
+  const [showDemoFallback, setShowDemoFallback] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState<string | null>(null);
+
+  // Controllo stato WhatsApp
+  const rawWhatsApp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '';
+  const isWhatsAppAvailable = Boolean(
+    rawWhatsApp &&
+      !rawWhatsApp.toLowerCase().includes('soon') &&
+      rawWhatsApp.replace(/[^0-9]/g, '').length >= 6
+  );
+  const whatsAppNumber = rawWhatsApp;
 
   useEffect(() => {
     try {
@@ -91,11 +110,20 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch(url);
       const data: CatalogResponse = await res.json();
 
-      if (data.products && data.products.length > 0) {
+      setIsDemo(Boolean(data.isDemo));
+      setDriveFolderName(data.folderName || 'Google Drive');
+
+      if (data.isEmptyDrive) {
+        setIsEmptyDrive(true);
+        setFolders([]);
+        setProducts([]);
+      } else if (data.products && data.products.length > 0) {
+        setIsEmptyDrive(false);
         setFolders(data.folders);
         setProducts(data.products);
-        setIsDemo(data.isDemo);
       } else {
+        // Fallback demo
+        setIsEmptyDrive(false);
         setFolders(DEMO_FOLDERS);
         setProducts(DEMO_PRODUCTS);
         setIsDemo(true);
@@ -158,6 +186,10 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const cartTotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
+  // Se l'utente attiva il fallback dimostrativo quando il drive è ancora vuoto
+  const displayedFolders = isEmptyDrive && showDemoFallback ? DEMO_FOLDERS : folders;
+  const displayedProducts = isEmptyDrive && showDemoFallback ? DEMO_PRODUCTS : products;
+
   return (
     <ShopContext.Provider
       value={{
@@ -170,13 +202,17 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
         cartTotal,
         isCartOpen,
         setIsCartOpen,
-        folders,
-        products,
+        folders: displayedFolders,
+        products: displayedProducts,
         selectedFolderId,
         setSelectedFolderId,
         searchQuery,
         setSearchQuery,
         isDemo,
+        isEmptyDrive,
+        driveFolderName,
+        showDemoFallback,
+        setShowDemoFallback,
         isLoading,
         catalogError,
         refreshCatalog,
@@ -184,6 +220,8 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
         setQuickViewProduct,
         isConfigOpen,
         setIsConfigOpen,
+        isWhatsAppAvailable,
+        whatsAppNumber,
       }}
     >
       {children}

@@ -95,6 +95,22 @@ export async function fetchGoogleDriveCatalog(
   }
 
   try {
+    // 0. Recupera nome della cartella principale per verificare i permessi
+    let rootFolderName = 'Cartella Drive';
+    try {
+      const metaRes = await fetch(
+        `https://www.googleapis.com/drive/v3/files/${folderId}?key=${key}&fields=id,name`,
+        { next: { revalidate: 60 } }
+      );
+      if (metaRes.ok) {
+        const metaData = await metaRes.json();
+        if (metaData.name) rootFolderName = metaData.name;
+      }
+    } catch {
+      // continua con fallback
+    }
+
+    // 1. Cerca le sottocartelle della cartella Root (queste comporranno il Menu)
     const folderQuery = encodeURIComponent(
       `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
     );
@@ -122,7 +138,7 @@ export async function fetchGoogleDriveCatalog(
     const folderData = await folderRes.json();
     const driveSubFolders: Array<{ id: string; name: string }> = folderData.files || [];
 
-    // Se non ci sono sottocartelle, cerchiamo le immagini direttamente nella cartella root
+    // Se non ci sono sottocartelle, cerchiamo se ci sono immagini direttamente nella cartella root
     if (driveSubFolders.length === 0) {
       const rootImagesQuery = encodeURIComponent(
         `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`
@@ -134,47 +150,62 @@ export async function fetchGoogleDriveCatalog(
         const rootImgData = await rootImgRes.json();
         const rootFiles: Array<{ id: string; name: string; createdTime?: string }> = rootImgData.files || [];
 
-        const defaultFolder: DriveFolder = {
-          id: folderId,
-          name: 'Collezione Principale',
-          slug: 'collezione-principale',
-          count: rootFiles.length,
-        };
-
-        const products: Product[] = rootFiles.map((file, idx) => {
-          const { name, price, originalPrice } = parseProductFileName(file.name, 'Collezione');
-          const urls = getDriveImageUrls(file.id);
-          return {
-            id: file.id,
-            name,
-            price,
-            originalPrice,
-            folderId: folderId,
-            folderName: defaultFolder.name,
-            imageUrl: urls.full,
-            thumbnailUrl: urls.thumbnail,
-            driveFileId: file.id,
-            sizes: ['XS', 'S', 'M', 'L', 'XL'],
-            inStock: true,
-            isNew: idx < 3,
-            isSale: Boolean(originalPrice),
-            description: `Capo della collezione ${defaultFolder.name}.`,
-            createdAt: file.createdTime,
+        if (rootFiles.length > 0) {
+          const defaultFolder: DriveFolder = {
+            id: folderId,
+            name: rootFolderName || 'Collezione Principale',
+            slug: slugify(rootFolderName || 'collezione-principale'),
+            count: rootFiles.length,
           };
-        });
 
-        return {
-          success: true,
-          isDemo: false,
-          folders: [defaultFolder],
-          products,
-          totalProducts: products.length,
-          rootFolderId: folderId,
-        };
+          const products: Product[] = rootFiles.map((file, idx) => {
+            const { name, price, originalPrice } = parseProductFileName(file.name, rootFolderName);
+            const urls = getDriveImageUrls(file.id);
+            return {
+              id: file.id,
+              name,
+              price,
+              originalPrice,
+              folderId: folderId,
+              folderName: defaultFolder.name,
+              imageUrl: urls.full,
+              thumbnailUrl: urls.thumbnail,
+              driveFileId: file.id,
+              sizes: ['XS', 'S', 'M', 'L', 'XL'],
+              inStock: true,
+              isNew: idx < 3,
+              isSale: Boolean(originalPrice),
+              description: `Capo della collezione ${defaultFolder.name}.`,
+              createdAt: file.createdTime,
+            };
+          });
+
+          return {
+            success: true,
+            isDemo: false,
+            folderName: rootFolderName,
+            folders: [defaultFolder],
+            products,
+            totalProducts: products.length,
+            rootFolderId: folderId,
+          };
+        }
       }
+
+      // La cartella Google Drive è valida e connessa, ma è attualmente vuota (0 sottocartelle, 0 immagini)
+      return {
+        success: true,
+        isDemo: false,
+        isEmptyDrive: true,
+        folderName: rootFolderName,
+        folders: [],
+        products: [],
+        totalProducts: 0,
+        rootFolderId: folderId,
+      };
     }
 
-    // Abbiamo trovato le sottocartelle: ognuna diventa un menu di categoria!
+    // Abbiamo trovato le sottocartelle: ognuna diventa una voce di menu!
     const folderPromises = driveSubFolders.map(async (folder) => {
       const imgQuery = encodeURIComponent(
         `'${folder.id}' in parents and mimeType contains 'image/' and trashed = false`
@@ -233,6 +264,8 @@ export async function fetchGoogleDriveCatalog(
     return {
       success: true,
       isDemo: false,
+      isEmptyDrive: allProducts.length === 0,
+      folderName: rootFolderName,
       folders: categories,
       products: allProducts,
       totalProducts: allProducts.length,

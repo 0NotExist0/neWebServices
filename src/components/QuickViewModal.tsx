@@ -11,10 +11,18 @@ import {
   Truck,
   RotateCcw,
   MessageCircle,
+  Clock,
 } from 'lucide-react';
 
 export default function QuickViewModal() {
-  const { quickViewProduct, setQuickViewProduct, addToCart } = useShop();
+  const {
+    quickViewProduct,
+    setQuickViewProduct,
+    addToCart,
+    isWhatsAppAvailable,
+    whatsAppNumber,
+  } = useShop();
+
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdded, setIsAdded] = useState(false);
@@ -40,11 +48,11 @@ export default function QuickViewModal() {
     }, 1000);
   };
 
-  const whatsappPhone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+393400000000';
+  const cleanPhone = (whatsAppNumber || '').replace(/[^0-9]/g, '');
   const whatsappMsg = encodeURIComponent(
     `Salve! Vorrei maggiori informazioni o ordinare il capo: *${quickViewProduct.name}* (Taglia: ${selectedSize}, Prezzo: ${quickViewProduct.price.toFixed(2)}€) visto sul vostro sito.`
   );
-  const whatsappUrl = `https://wa.me/${whatsappPhone.replace(/[^0-9]/g, '')}?text=${whatsappMsg}`;
+  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${whatsappMsg}`;
 
   const displayImage = imgError
     ? 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80'
@@ -182,15 +190,22 @@ export default function QuickViewModal() {
               )}
             </button>
 
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 rounded-xl border border-emerald-500/30 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-medium text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
-            >
-              <MessageCircle className="w-4 h-4 text-emerald-600" />
-              <span>Richiedi info o ordina su WhatsApp</span>
-            </a>
+            {isWhatsAppAvailable ? (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3 rounded-xl border border-emerald-500/30 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-medium text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4 text-emerald-600" />
+                <span>Richiedi info o ordina su WhatsApp</span>
+              </a>
+            ) : (
+              <div className="w-full py-2.5 px-3 rounded-xl bg-neutral-100 border border-neutral-200 text-neutral-500 text-xs flex items-center justify-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-neutral-400" />
+                <span>Assistenza WhatsApp: Prossimamente attiva (Coming Soon)</span>
+              </div>
+            )}
 
             <div className="grid grid-cols-3 gap-2 pt-4 border-t border-neutral-100 text-center">
               <div className="flex flex-col items-center text-[10px] text-neutral-500">

@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Truck,
   CheckCircle,
+  Clock,
 } from 'lucide-react';
 
 export default function CartDrawer() {
@@ -23,6 +24,8 @@ export default function CartDrawer() {
     updateQuantity,
     clearCart,
     cartTotal,
+    isWhatsAppAvailable,
+    whatsAppNumber,
   } = useShop();
 
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'checkout' | 'success'>('cart');
@@ -47,14 +50,15 @@ export default function CartDrawer() {
   };
 
   const handleWhatsAppCheckout = () => {
-    const whatsappNumber = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+393400000000').replace(/[^0-9]/g, '');
+    if (!isWhatsAppAvailable) return;
+    const cleanPhone = (whatsAppNumber || '').replace(/[^0-9]/g, '');
 
     let msg = '*NUOVO ORDINE DA SITO WEB*\n\n';
     msg += '*Articoli nel Carrello:*\n';
     cart.forEach((item, idx) => {
       msg += `${idx + 1}. *${item.product.name}*\n`;
       msg += `   - Taglia: ${item.size}\n`;
-      msg += `   - Quantita: ${item.quantity}\n`;
+      msg += `   - Quantità: ${item.quantity}\n`;
       msg += `   - Prezzo: ${(item.product.price * item.quantity).toFixed(2)} €\n`;
     });
 
@@ -73,13 +77,15 @@ export default function CartDrawer() {
     msg += `\nResto in attesa della vostra conferma per procedere. Grazie!`;
 
     const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/${whatsappNumber}?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/${cleanPhone}?text=${encoded}`, '_blank');
   };
 
   const handleDirectSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setCheckoutStep('success');
-    handleWhatsAppCheckout();
+    if (isWhatsAppAvailable) {
+      handleWhatsAppCheckout();
+    }
     clearCart();
   };
 
@@ -132,10 +138,10 @@ export default function CartDrawer() {
                   <CheckCircle className="w-8 h-8" />
                 </div>
                 <h3 className="font-serif text-2xl font-bold text-neutral-900">
-                  Ordine Inviato!
+                  Ordine Ricevuto!
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-600 max-w-xs mx-auto">
-                  Grazie per il tuo acquisto. Abbiamo aperto la chat WhatsApp con i dettagli del tuo ordine. Ti risponderemo a breve per confermare la spedizione!
+                  Grazie per il tuo acquisto! I dati del tuo ordine sono stati registrati con successo. Verrai ricontattato a breve per la conferma della spedizione.
                 </p>
                 <button
                   onClick={() => {
@@ -238,7 +244,7 @@ export default function CartDrawer() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-neutral-700 block mb-1">Numero Telefono / WhatsApp *</label>
+                  <label className="text-xs font-medium text-neutral-700 block mb-1">Numero Telefono *</label>
                   <input
                     type="tel"
                     name="phone"
@@ -335,13 +341,20 @@ export default function CartDrawer() {
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
-                  <button
-                    onClick={handleWhatsAppCheckout}
-                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>Ordina Subito con WhatsApp</span>
-                  </button>
+                  {isWhatsAppAvailable ? (
+                    <button
+                      onClick={handleWhatsAppCheckout}
+                      className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Ordina Subito con WhatsApp</span>
+                    </button>
+                  ) : (
+                    <div className="py-2 text-center text-[11px] text-neutral-400 flex items-center justify-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>Integrazione WhatsApp attiva a breve (Coming Soon)</span>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="flex gap-2">
@@ -355,7 +368,7 @@ export default function CartDrawer() {
                   <button
                     type="submit"
                     form="checkout-form"
-                    className="w-2/3 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+                    className="w-2/3 py-3 bg-neutral-950 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                   >
                     <span>Conferma Ordine</span>
                   </button>

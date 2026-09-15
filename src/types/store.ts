@@ -33,6 +33,8 @@ export interface CartItem {
 export interface CatalogResponse {
   success: boolean;
   isDemo: boolean;
+  isEmptyDrive?: boolean;
+  folderName?: string;
   folders: DriveFolder[];
   products: Product[];
   totalProducts: number;
