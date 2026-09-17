@@ -12,6 +12,7 @@ import {
   RotateCcw,
   MessageCircle,
   Clock,
+  ExternalLink,
 } from 'lucide-react';
 
 export default function QuickViewModal() {
@@ -91,9 +92,17 @@ export default function QuickViewModal() {
 
         <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-neutral-100 text-neutral-700 text-xs rounded-md font-medium">
-              <Folder className="w-3.5 h-3.5 text-amber-600" />
-              <span>Cartella Drive: {quickViewProduct.folderName}</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-neutral-100 text-neutral-700 text-xs rounded-md font-medium">
+                <Folder className="w-3.5 h-3.5 text-amber-600" />
+                <span>Cartella Drive: {quickViewProduct.folderName}</span>
+              </div>
+              {quickViewProduct.isEbayItem && (
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-100 text-blue-900 text-xs rounded-md font-bold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Oggetto su eBay • newebservices</span>
+                </div>
+              )}
             </div>
 
             <div>
@@ -168,6 +177,28 @@ export default function QuickViewModal() {
           </div>
 
           <div className="pt-6 space-y-3 mt-4">
+            {quickViewProduct.isEbayItem && quickViewProduct.ebayListingUrl && (
+              <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-blue-900">
+                    <ShieldCheck className="w-4 h-4 text-blue-600" />
+                    <span>Garanzia Cliente eBay Inclusa</span>
+                  </div>
+                  <span className="text-[11px] text-blue-700 font-medium">Venditore: newebservices</span>
+                </div>
+                <a
+                  href={quickViewProduct.ebayListingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+                >
+                  <span className="font-extrabold tracking-wider">eBay</span>
+                  <span>Acquista con Protezione su eBay • {(quickViewProduct.price * quantity).toFixed(2)} €</span>
+                  <ExternalLink className="w-4 h-4 opacity-90" />
+                </a>
+              </div>
+            )}
+
             <button
               onClick={handleAddToCart}
               disabled={isAdded}

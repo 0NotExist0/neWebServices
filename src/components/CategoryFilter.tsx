@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { useShop } from '@/context/ShopContext';
-import { Folder, SlidersHorizontal, RefreshCw } from 'lucide-react';
+import { Folder, SlidersHorizontal, RefreshCw, ShieldCheck, ExternalLink } from 'lucide-react';
+import { EBAY_STORE_URL } from '@/lib/services-data';
 
 interface CategoryFilterProps {
   sortBy: string;
@@ -81,17 +82,26 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
 
         {folders.map((folder) => {
           const isSelected = selectedFolderId === folder.id;
+          const isEbayFolder = folder.name.toLowerCase().includes('ebay');
           return (
             <button
               key={folder.id}
               onClick={() => setSelectedFolderId(folder.id)}
               className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 ${
                 isSelected
-                  ? 'bg-neutral-900 text-white shadow-md'
+                  ? isEbayFolder
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-neutral-900 text-white shadow-md'
+                  : isEbayFolder
+                  ? 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
               }`}
             >
-              <Folder className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-300' : 'text-neutral-400'}`} />
+              {isEbayFolder ? (
+                <ShieldCheck className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-200' : 'text-blue-600'}`} />
+              ) : (
+                <Folder className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-300' : 'text-neutral-400'}`} />
+              )}
               <span>{folder.name}</span>
               {folder.count > 0 && (
                 <span
@@ -106,6 +116,38 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
           );
         })}
       </div>
+
+      {/* Banner Esplicativo quando è selezionata una cartella eBay */}
+      {currentFolder?.name.toLowerCase().includes('ebay') && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-linear-to-r from-blue-950/10 via-blue-50 to-amber-50/40 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="p-2.5 bg-blue-600 text-white rounded-xl shrink-0 shadow-xs">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-800 uppercase tracking-wide">
+                <span>Account eBay Ufficiale: newebservices</span>
+              </div>
+              <h4 className="text-sm sm:text-base font-bold text-neutral-900 leading-tight">
+                Capi in Vendita con Garanzia Cliente eBay
+              </h4>
+              <p className="text-xs text-neutral-600 mt-0.5 max-w-xl leading-relaxed">
+                Tutti i capi caricati in questa sezione sono protetti al 100% dalla Garanzia eBay. Puoi acquistare direttamente tramite il link eBay o aggiungerli al carrello del sito.
+              </p>
+            </div>
+          </div>
+
+          <a
+            href={EBAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-colors shrink-0 shadow-xs"
+          >
+            <span>Negozio Ufficiale eBay</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

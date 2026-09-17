@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Product } from '@/types/store';
 import { useShop } from '@/context/ShopContext';
-import { Eye, ShoppingBag, Check, Folder } from 'lucide-react';
+import { Eye, ShoppingBag, Check, Folder, ExternalLink, ShieldCheck } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -49,6 +49,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.isNew && (
             <span className="px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider bg-neutral-900 text-white rounded-md shadow-xs">
               Novità
+            </span>
+          )}
+          {product.isEbayItem && (
+            <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider bg-blue-600 text-white rounded-md shadow-xs flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3" />
+              <span>Su eBay</span>
             </span>
           )}
           {product.folderName && (
@@ -117,23 +123,39 @@ export default function ProductCard({ product }: ProductCardProps) {
               ))}
             </div>
 
-            <button
-              type="button"
-              onClick={handleAdd}
-              disabled={addedAnimation}
-              className={`p-2 rounded-lg transition-all flex items-center justify-center shrink-0 cursor-pointer ${
-                addedAnimation
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-neutral-900 text-white hover:bg-neutral-800'
-              }`}
-              title="Aggiungi al Carrello"
-            >
-              {addedAnimation ? (
-                <Check className="w-4 h-4" />
-              ) : (
-                <ShoppingBag className="w-4 h-4" />
+            <div className="flex items-center gap-1.5 shrink-0">
+              {product.isEbayItem && product.ebayListingUrl && (
+                <a
+                  href={product.ebayListingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="px-2 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold flex items-center gap-1 transition-all shadow-xs"
+                  title="Acquista protetto su eBay (newebservices)"
+                >
+                  <span>eBay</span>
+                  <ExternalLink className="w-3 h-3 opacity-90" />
+                </a>
               )}
-            </button>
+
+              <button
+                type="button"
+                onClick={handleAdd}
+                disabled={addedAnimation}
+                className={`p-2 rounded-lg transition-all flex items-center justify-center shrink-0 cursor-pointer ${
+                  addedAnimation
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-neutral-900 text-white hover:bg-neutral-800'
+                }`}
+                title="Aggiungi al Carrello"
+              >
+                {addedAnimation ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <ShoppingBag className="w-4 h-4" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

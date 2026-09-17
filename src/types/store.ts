@@ -21,6 +21,8 @@ export interface Product {
   isSale?: boolean;
   description?: string;
   createdAt?: string;
+  isEbayItem?: boolean;
+  ebayListingUrl?: string;
 }
 
 export interface CartItem {

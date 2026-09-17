@@ -13,6 +13,8 @@ import {
   Truck,
   CheckCircle,
   Clock,
+  ShieldCheck,
+  ExternalLink,
 } from 'lucide-react';
 
 export default function CartDrawer() {
@@ -189,6 +191,19 @@ export default function CartDrawer() {
                         <span>•</span>
                         <span>{item.product.price.toFixed(2)} €</span>
                       </div>
+
+                      {item.product.isEbayItem && item.product.ebayListingUrl && (
+                        <a
+                          href={item.product.ebayListingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 mt-1"
+                        >
+                          <ShieldCheck className="w-3 h-3" />
+                          <span>Acquista con Garanzia eBay</span>
+                          <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      )}
 
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center border border-neutral-200 rounded-md bg-neutral-50">
