@@ -104,13 +104,11 @@ export default function QuickViewModal() {
 
             {/* Badges */}
             <div className="absolute top-4 left-4 flex flex-col gap-1.5 z-10 pointer-events-none">
-              {quickViewProduct.isSale && (
-                <div className="bg-rose-600 text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-wider shadow-md">
-                  In Promozione
-                </div>
-              )}
+              <div className="bg-[#141414] text-[#F5E272] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-md">
+                Pezzo Unico d&apos;Archivio
+              </div>
               {allImages.length > 1 && (
-                <div className="bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-xs">
+                <div className="bg-[#141414]/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs">
                   Foto {activeImageIndex + 1} di {allImages.length}
                 </div>
               )}
@@ -275,28 +273,28 @@ export default function QuickViewModal() {
 
           <div className="pt-6 space-y-3 mt-4">
             {quickViewProduct.isEbayItem && quickViewProduct.ebayListingUrl && (
-              <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+              <div className="p-4 rounded-2xl bg-[#141414] text-[#F5E272] border-2 border-black space-y-3 shadow-lg">
                 <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1.5 font-bold text-blue-900">
-                    <ShieldCheck className="w-4 h-4 text-blue-600" />
-                    <span>Garanzia Cliente eBay Inclusa</span>
+                  <div className="flex items-center gap-1.5 font-black uppercase tracking-wider text-[#F5E272]">
+                    <ShieldCheck className="w-4 h-4 text-[#F5E272]" />
+                    <span>Garanzia Ufficiale eBay</span>
                   </div>
-                  <span className="text-[11px] text-blue-700 font-medium">Venditore: newebservices</span>
+                  <span className="text-[10px] font-bold text-neutral-300">Venditore: newebservices</span>
                 </div>
                 <a
                   href={quickViewProduct.ebayListingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+                  className="w-full py-3.5 px-4 rounded-full bg-[#F5E272] hover:bg-white text-[#141414] font-black uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer hover:scale-105"
                 >
-                  <span className="font-extrabold tracking-wider">eBay</span>
+                  <ShieldCheck className="w-4 h-4" />
                   <span>
-                    Acquista con Protezione su eBay
+                    Acquista su eBay
                     {quickViewProduct.price !== undefined && quickViewProduct.price !== null
                       ? ` • ${(quickViewProduct.price * quantity).toFixed(2)} €`
                       : ''}
                   </span>
-                  <ExternalLink className="w-4 h-4 opacity-90" />
+                  <ExternalLink className="w-4 h-4 opacity-70" />
                 </a>
               </div>
             )}
@@ -304,22 +302,22 @@ export default function QuickViewModal() {
             <button
               onClick={handleAddToCart}
               disabled={isAdded}
-              className={`w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer ${
+              className={`w-full py-3.5 rounded-full font-black uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 border-2 border-[#141414] shadow-md transition-all cursor-pointer hover:scale-105 ${
                 isAdded
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-neutral-950 text-white hover:bg-neutral-800'
+                  ? 'bg-emerald-800 text-white border-emerald-800'
+                  : 'bg-[#141414] text-[#F5E272] hover:bg-black'
               }`}
             >
               {isAdded ? (
                 <>
                   <Check className="w-5 h-5" />
-                  <span>Aggiunto al Carrello!</span>
+                  <span>Aggiunto al Carrello Personale!</span>
                 </>
               ) : (
                 <>
                   <ShoppingBag className="w-5 h-5" />
                   <span>
-                    Aggiungi al Carrello
+                    Aggiungi al Carrello Personale
                     {quickViewProduct.price !== undefined && quickViewProduct.price !== null
                       ? ` • ${(quickViewProduct.price * quantity).toFixed(2)} €`
                       : ''}

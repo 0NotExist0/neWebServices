@@ -51,16 +51,16 @@ export default function WebServicesShowcase() {
               href={EBAY_STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full border border-blue-500/40 bg-blue-950/40 hover:bg-blue-900/60 text-blue-300 hover:text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-xs"
+              className="px-5 py-2.5 rounded-full border-2 border-[#F5E272] bg-[#141414] hover:bg-[#F5E272] hover:text-[#141414] text-[#F5E272] text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
             >
-              <ShieldCheck className="w-4 h-4 text-blue-400" />
+              <ShieldCheck className="w-4 h-4" />
               <span>Negozio Ufficiale eBay</span>
               <ExternalLink className="w-3 h-3" />
             </a>
 
             <Link
               href="/servizi-web"
-              className="px-6 py-2.5 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 text-xs font-bold flex items-center gap-2 transition-all shadow-md"
+              className="px-6 py-2.5 rounded-full bg-[#F5E272] hover:bg-white text-[#141414] text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md cursor-pointer"
             >
               <span>Vedi Tutti i Pacchetti</span>
               <ArrowRight className="w-3.5 h-3.5" />

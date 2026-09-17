@@ -8,13 +8,10 @@ import {
   Search,
   Menu as MenuIcon,
   X,
-  HardDrive,
-  Sparkles,
-  SlidersHorizontal,
-  Code,
-  ExternalLink,
   ShieldCheck,
-  ArrowRight,
+  HardDrive,
+  Ticket,
+  ChevronDown,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -29,7 +26,6 @@ export default function Navbar() {
     setIsCartOpen,
     isDemo,
     setIsConfigOpen,
-    isLoading,
   } = useShop();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,298 +42,193 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Banner Informativo con eBay e Spedizioni */}
-      <div className="bg-neutral-900 text-neutral-200 text-xs py-2 px-4 text-center font-medium tracking-wider flex flex-wrap items-center justify-center gap-2 sm:gap-4 border-b border-neutral-800">
-        <div className="flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>NotExistShoppingPlace by 0Not_Exist0</span>
+      {/* 1. Psychological Marquee Ticker (Urgenza, Scarsità, Autorevolezza) */}
+      <div className="bg-[#141414] text-[#F5E272] text-[11px] py-1.5 overflow-hidden font-black tracking-widest uppercase select-none border-b border-black/20">
+        <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
+          <span>⚡ DROP ESCLUSIVO • NOT EXIST SHOPPING PLACE BY 0NOT_EXIST0</span>
+          <span>•</span>
+          <span>🔥 TUTTI I CAPI SONO PEZZI UNICI D&apos;ARCHIVIO — NESSUN DOPPIONE</span>
+          <span>•</span>
+          <span>🛡️ 100% GARANZIA CLIENTE EBAY • VENDITORE UFFICIALE NEWEBSERVICES</span>
+          <span>•</span>
+          <span>📦 SPEDIZIONE ESPRESSA TRACCIATA IN 24/48H</span>
+          <span>•</span>
+          <span>🚀 REALIZZAZIONE SITI WEB &amp; E-COMMERCE PROFESSIONALI DISPONIBILI</span>
+          <span>•</span>
+          <span>⚡ DROP ESCLUSIVO • NOT EXIST SHOPPING PLACE BY 0NOT_EXIST0</span>
+          <span>•</span>
+          <span>🔥 TUTTI I CAPI SONO PEZZI UNICI D&apos;ARCHIVIO — NESSUN DOPPIONE</span>
+          <span>•</span>
+          <span>🛡️ 100% GARANZIA CLIENTE EBAY • VENDITORE UFFICIALE NEWEBSERVICES</span>
+          <span>•</span>
+          <span>📦 SPEDIZIONE ESPRESSA TRACCIATA IN 24/48H</span>
         </div>
-
-        <span className="hidden sm:inline text-neutral-600">•</span>
-
-        {/* Link eBay Negozio Ufficiale */}
-        <a
-          href={EBAY_STORE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-blue-300 hover:text-white font-semibold underline text-[11px] transition-colors"
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-          <span>Negozio Ufficiale su eBay: newebservices</span>
-          <ExternalLink className="w-2.5 h-2.5 opacity-80" />
-        </a>
-
-        <span className="hidden sm:inline text-neutral-600">•</span>
-
-        <button
-          onClick={() => setIsConfigOpen(true)}
-          className="underline hover:text-white flex items-center gap-1 text-[11px] opacity-90 transition-opacity cursor-pointer"
-          title="Configura Google Drive"
-        >
-          <HardDrive className="w-3 h-3 text-amber-400" />
-          {isDemo ? 'Configura Drive' : 'Drive Connesso'}
-        </button>
       </div>
 
-      {/* Main Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-100 shadow-xs transition-all">
+      {/* 2. Frans Hals Museum Inspired Header */}
+      <header className="sticky top-0 z-30 bg-[#F5E272] text-[#141414] border-b border-black/10 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-20 sm:h-24">
+            
+            {/* Left: Language Pill & Search (Desktop) */}
+            <div className="hidden lg:flex items-center gap-4">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-black/20 bg-black/5 text-xs font-bold tracking-wider uppercase cursor-pointer hover:bg-black/10 transition-colors">
+                <span>🇮🇹 IT</span>
+                <ChevronDown className="w-3 h-3 opacity-70" />
+              </div>
+
+              <nav className="flex items-center gap-6 text-xs font-black tracking-widest uppercase">
+                <button
+                  onClick={() => {
+                    setSelectedFolderId('all');
+                    const el = document.getElementById('catalog-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="hover:opacity-70 transition-opacity cursor-pointer"
+                >
+                  Collezione
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedFolderId('ebay-capi');
+                    const el = document.getElementById('catalog-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="hover:opacity-70 transition-opacity cursor-pointer"
+                >
+                  Archivio eBay
+                </button>
+              </nav>
+            </div>
+
             {/* Mobile menu trigger */}
             <div className="flex items-center lg:hidden">
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-md text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 focus:outline-hidden cursor-pointer"
+                className="p-2 rounded-xl text-[#141414] hover:bg-black/10 cursor-pointer"
                 aria-label="Apri menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
               </button>
             </div>
 
-            {/* Brand Logo */}
-            <div className="flex items-center">
-              <Link href="/" className="text-left group cursor-pointer focus:outline-hidden">
-                <div className="flex items-baseline gap-1">
-                  <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 group-hover:opacity-80 transition-opacity">
-                    NotExist<span className="text-amber-600 font-light">ShoppingPlace</span>
-                  </span>
+            {/* Center: Iconic Compact Museum-Style Typography Logo */}
+            <div className="text-center">
+              <Link href="/" className="inline-block group cursor-pointer focus:outline-none">
+                <div className="font-black text-xl sm:text-2xl md:text-3xl tracking-tighter uppercase leading-[0.88] text-[#141414]">
+                  <div>NOT EXIST</div>
+                  <div className="text-[13px] sm:text-[15px] tracking-widest font-extrabold text-[#141414]/90">
+                    SHOPPING PLACE
+                  </div>
                 </div>
-                <span className="text-[9px] tracking-[0.25em] font-sans font-medium text-neutral-500 uppercase block">
-                  Couture &amp; Tech • by 0Not_Exist0
-                </span>
+                <div className="text-[9px] sm:text-[10px] tracking-[0.25em] font-black uppercase text-[#141414]/70 mt-1">
+                  BY 0NOT_EXIST0
+                </div>
               </Link>
             </div>
 
-            {/* Desktop Navigation Menu */}
-            <nav className="hidden lg:flex items-center space-x-1">
-              <Link
-                href="/"
-                onClick={() => handleSelectCategory('all')}
-                className={`px-3 py-2 text-sm font-medium tracking-wide transition-all rounded-md cursor-pointer ${
-                  selectedFolderId === 'all'
-                    ? 'text-neutral-950 font-semibold border-b-2 border-neutral-950 rounded-none'
-                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50'
-                }`}
-              >
-                Tutti i Capi
-              </Link>
+            {/* Right: Nav Links & Iconic Frans Hals Pill Button */}
+            <div className="flex items-center gap-4 sm:gap-6">
+              <nav className="hidden lg:flex items-center gap-6 text-xs font-black tracking-widest uppercase">
+                <Link
+                  href="/servizi-web"
+                  className="hover:opacity-70 transition-opacity cursor-pointer flex items-center gap-1 text-purple-950 font-black"
+                >
+                  <span>Servizi Web</span>
+                  <span className="text-[9px] bg-black text-[#F5E272] px-1 rounded-sm">NEW</span>
+                </Link>
 
-              {folders.map((folder) => {
-                const isActive = selectedFolderId === folder.id;
-                return (
-                  <button
-                    key={folder.id}
-                    onClick={() => handleSelectCategory(folder.id)}
-                    className={`px-3 py-2 text-sm font-medium tracking-wide transition-all rounded-md flex items-center gap-1.5 cursor-pointer ${
-                      isActive
-                        ? 'text-neutral-950 font-semibold border-b-2 border-neutral-950 rounded-none'
-                        : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-50'
-                    }`}
-                  >
-                    <span>{folder.name}</span>
-                    {folder.count > 0 && (
-                      <span className="text-[11px] font-normal px-1.5 py-0.5 bg-neutral-100 text-neutral-600 rounded-full">
-                        {folder.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+                <a
+                  href={EBAY_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-70 transition-opacity cursor-pointer flex items-center gap-1 text-[#141414]"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>eBay Store</span>
+                </a>
 
-              {/* Pulsante in evidenza per Servizi Web & App */}
-              <Link
-                href="/servizi-web"
-                className="ml-2 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-neutral-900 bg-linear-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 border border-amber-300/80 rounded-full flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
-              >
-                <Code className="w-3.5 h-3.5 text-amber-800" />
-                <span>Servizi Web &amp; App</span>
-                <span className="text-[10px] px-1.5 py-0.2 bg-amber-400/30 text-amber-900 font-bold rounded-full">
-                  NEW
-                </span>
-              </Link>
+                <button
+                  onClick={() => setIsConfigOpen(true)}
+                  className="hover:opacity-70 transition-opacity cursor-pointer flex items-center gap-1 text-[#141414]"
+                  title="Gestione Google Drive"
+                >
+                  <HardDrive className="w-3.5 h-3.5" />
+                  <span>Drive</span>
+                </button>
+              </nav>
 
-              {/* Tasto eBay */}
-              <a
-                href={EBAY_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 hover:bg-blue-50 rounded-full transition-colors flex items-center gap-1"
-                title="Visita il nostro negozio su eBay"
-              >
-                <span>eBay</span>
-                <ExternalLink className="w-3 h-3 text-blue-500" />
-              </a>
-            </nav>
-
-            {/* Right Icons: Search, Drive Config, Cart */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <div className="relative hidden sm:block">
-                <input
-                  type="text"
-                  placeholder="Cerca vestito, abito..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-44 focus:w-64 transition-all duration-300 pl-9 pr-4 py-1.5 text-xs bg-neutral-50 hover:bg-neutral-100 focus:bg-white border border-neutral-200 rounded-full focus:outline-none focus:ring-1 focus:ring-neutral-900"
-                />
-                <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-
+              {/* Iconic Black Pill CTA (Matching "Buy tickets" in Image 3) */}
               <button
-                type="button"
-                onClick={() => setSearchOpen(!searchOpen)}
-                className="sm:hidden p-2 text-neutral-600 hover:text-neutral-900 rounded-full hover:bg-neutral-100 cursor-pointer"
-                aria-label="Cerca"
-              >
-                <Search className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsConfigOpen(true)}
-                className={`p-2 rounded-full border transition-all flex items-center gap-1.5 text-xs font-medium cursor-pointer ${
-                  isDemo
-                    ? 'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100'
-                    : 'border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
-                }`}
-                title="Gestione connessione Google Drive"
-              >
-                <HardDrive className="w-4 h-4" />
-                <span className="hidden md:inline">
-                  {isLoading ? 'Aggiornamento...' : isDemo ? 'Demo Drive' : 'Drive Attivo'}
-                </span>
-                {isDemo ? (
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                ) : (
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                )}
-              </button>
-
-              <button
-                type="button"
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all flex items-center justify-center shadow-xs cursor-pointer"
-                aria-label="Carrello"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#141414] hover:bg-black text-[#F5E272] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center gap-2 shadow-lg transition-all hover:scale-105 cursor-pointer"
               >
-                <ShoppingBag className="w-5 h-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-amber-500 text-neutral-950 font-bold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-xs">
-                    {cartCount}
-                  </span>
-                )}
+                <Ticket className="w-4 h-4 text-[#F5E272]" />
+                <span>Carrello</span>
+                <span className="bg-[#F5E272] text-[#141414] text-[11px] font-black px-2 py-0.5 rounded-full ml-1">
+                  {cartCount}
+                </span>
               </button>
             </div>
-          </div>
 
-          {searchOpen && (
-            <div className="pb-3 sm:hidden pt-1">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Cerca vestito, colore o stile..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                  className="w-full pl-9 pr-8 py-2 text-sm bg-neutral-50 border border-neutral-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-neutral-900"
-                />
-                <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
+        {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-neutral-100 bg-white px-4 pt-3 pb-6 space-y-2 shadow-lg">
-            
-            {/* Sezione Servizi Digitali Mobile */}
-            <div className="p-3 bg-neutral-900 text-white rounded-xl mb-3 space-y-2">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400">
-                Soluzioni Digitali
-              </div>
-              <Link
-                href="/servizi-web"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between text-sm font-semibold text-white hover:text-amber-300"
-              >
-                <div className="flex items-center gap-2">
-                  <Code className="w-4 h-4 text-amber-400" />
-                  <span>Siti Web &amp; App su Misura</span>
-                </div>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <a
-                href={EBAY_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between text-xs text-blue-300 hover:text-white pt-1 border-t border-neutral-800"
-              >
-                <span>Negozio Ufficiale su eBay</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
+          <div className="lg:hidden bg-[#F5E272] border-t border-black/10 px-4 py-6 space-y-4 shadow-xl">
+            <div className="text-xs font-black uppercase tracking-widest text-[#141414]/70 mb-2">
+              Menu Principale
             </div>
-
-            <div className="text-xs font-bold text-neutral-400 uppercase tracking-widest px-3 py-1">
-              Collezione Abbigliamento
-            </div>
-
-            <Link
-              href="/"
+            <button
               onClick={() => handleSelectCategory('all')}
-              className={`w-full text-left px-3 py-2.5 rounded-md text-base font-medium flex items-center justify-between cursor-pointer ${
-                selectedFolderId === 'all'
-                  ? 'bg-neutral-900 text-white font-semibold'
-                  : 'text-neutral-700 hover:bg-neutral-100'
-              }`}
+              className="w-full text-left py-2 text-sm font-black uppercase tracking-wider text-[#141414] hover:opacity-70 flex justify-between"
             >
               <span>Tutti i Capi</span>
-              <span className="text-xs opacity-75">Catalogo</span>
+              <span className="font-bold">→</span>
+            </button>
+            <button
+              onClick={() => handleSelectCategory('ebay-capi')}
+              className="w-full text-left py-2 text-sm font-black uppercase tracking-wider text-[#141414] hover:opacity-70 flex justify-between"
+            >
+              <span>Archivio Abbigliamento eBay</span>
+              <span className="font-bold">→</span>
+            </button>
+            <button
+              onClick={() => handleSelectCategory('ebay-servizi')}
+              className="w-full text-left py-2 text-sm font-black uppercase tracking-wider text-[#141414] hover:opacity-70 flex justify-between"
+            >
+              <span>Servizi Web &amp; App</span>
+              <span className="font-bold">→</span>
+            </button>
+            <Link
+              href="/servizi-web"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-left py-2 text-sm font-black uppercase tracking-wider text-purple-950 flex justify-between"
+            >
+              <span>Vetrina Servizi Web Completa</span>
+              <span className="font-bold">→</span>
             </Link>
-
-            {folders.map((folder) => (
-              <button
-                key={folder.id}
-                onClick={() => handleSelectCategory(folder.id)}
-                className={`w-full text-left px-3 py-2.5 rounded-md text-base font-medium flex items-center justify-between cursor-pointer ${
-                  selectedFolderId === folder.id
-                    ? 'bg-neutral-900 text-white font-semibold'
-                    : 'text-neutral-700 hover:bg-neutral-100'
-                }`}
-              >
-                <span>{folder.name}</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600">
-                  {folder.count}
-                </span>
-              </button>
-            ))}
-
-            <div className="pt-4 border-t border-neutral-100 flex flex-col gap-2">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsConfigOpen(true);
-                }}
-                className="w-full text-left px-3 py-2 text-sm text-neutral-600 hover:text-neutral-900 flex items-center gap-2 cursor-pointer"
-              >
-                <SlidersHorizontal className="w-4 h-4" />
-                <span>Impostazioni &amp; Chiavi Drive</span>
-              </button>
-            </div>
+            <a
+              href={EBAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full text-left py-2 text-sm font-black uppercase tracking-wider text-blue-950 flex items-center justify-between"
+            >
+              <span>Negozio Ufficiale eBay (newebservices)</span>
+              <ShieldCheck className="w-4 h-4 text-blue-800" />
+            </a>
+            <button
+              onClick={() => {
+                setIsConfigOpen(true);
+                setMobileMenuOpen(false);
+              }}
+              className="w-full text-left py-2 text-sm font-black uppercase tracking-wider text-[#141414]/80 flex items-center justify-between"
+            >
+              <span>Gestione Google Drive</span>
+              <HardDrive className="w-4 h-4" />
+            </button>
           </div>
         )}
       </header>

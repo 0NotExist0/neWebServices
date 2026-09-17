@@ -39,41 +39,41 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 border-b border-neutral-900">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-neutral-900 text-amber-400 rounded-2xl shrink-0">
+            <div className="p-3 bg-[#141414] text-[#F5E272] rounded-2xl border border-white/10 shrink-0">
               <Truck className="w-6 h-6" />
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-white">Spedizioni Veloci</h5>
+              <h5 className="text-sm font-black uppercase tracking-wider text-white">Spedizioni Veloci</h5>
               <p className="text-xs text-neutral-400 mt-0.5">Consegna espressa 24/48h tracciata</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-neutral-900 text-blue-400 rounded-2xl shrink-0">
+            <div className="p-3 bg-[#141414] text-[#F5E272] rounded-2xl border border-white/10 shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-white">Venditore Ufficiale eBay</h5>
+              <h5 className="text-sm font-black uppercase tracking-wider text-white">Venditore Ufficiale eBay</h5>
               <p className="text-xs text-neutral-400 mt-0.5">Garanzia Cliente &amp; Pagamenti protetti</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-neutral-900 text-amber-400 rounded-2xl shrink-0">
+            <div className="p-3 bg-[#141414] text-[#F5E272] rounded-2xl border border-white/10 shrink-0">
               <Code className="w-6 h-6" />
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-white">Siti &amp; App su Misura</h5>
+              <h5 className="text-sm font-black uppercase tracking-wider text-white">Siti &amp; App su Misura</h5>
               <p className="text-xs text-neutral-400 mt-0.5">Sviluppo web e e-commerce con Drive</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-neutral-900 text-emerald-400 rounded-2xl shrink-0">
+            <div className="p-3 bg-[#141414] text-[#F5E272] rounded-2xl border border-white/10 shrink-0">
               <HardDrive className="w-6 h-6" />
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-white">Google Drive Sync</h5>
+              <h5 className="text-sm font-black uppercase tracking-wider text-white">Google Drive Sync</h5>
               <p className="text-xs text-neutral-400 mt-0.5">Catalogo aggiornato in tempo reale</p>
             </div>
           </div>
@@ -86,9 +86,15 @@ export default function Footer() {
           
           {/* Brand Colonna */}
           <div className="space-y-4 md:col-span-1">
-            <span className="font-serif text-2xl font-bold tracking-tight text-white block">
-              NotExist<span className="text-amber-400 font-light">ShoppingPlace</span>
-            </span>
+            <div className="font-black text-xl tracking-tighter uppercase leading-[0.88] text-white">
+              <div>NOT EXIST</div>
+              <div className="text-xs tracking-widest font-extrabold text-[#F5E272]">
+                SHOPPING PLACE
+              </div>
+              <div className="text-[8px] tracking-[0.2em] font-black uppercase text-neutral-400 mt-1">
+                BY 0NOT_EXIST0
+              </div>
+            </div>
             <span className="text-[10px] tracking-[0.2em] font-sans font-medium text-neutral-400 uppercase block -mt-2">
               by 0Not_Exist0
             </span>

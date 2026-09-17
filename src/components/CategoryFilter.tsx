@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useShop } from '@/context/ShopContext';
-import { Folder, SlidersHorizontal, RefreshCw, ShieldCheck, ExternalLink } from 'lucide-react';
+import { SlidersHorizontal, RefreshCw, ShieldCheck, ExternalLink, Flame } from 'lucide-react';
 import { EBAY_STORE_URL } from '@/lib/services-data';
 
 interface CategoryFilterProps {
@@ -18,34 +18,61 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
     products,
     refreshCatalog,
     isLoading,
+    searchQuery,
+    setSearchQuery,
   } = useShop();
 
   const currentFolder = folders.find((f) => f.id === selectedFolderId);
 
   return (
-    <div className="mb-10 space-y-6">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-neutral-200 pb-5">
-        <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-neutral-500 mb-1">
-            <Folder className="w-3.5 h-3.5 text-amber-600" />
-            <span>Cartelle & Collezioni</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-serif font-semibold text-neutral-900">
-            {selectedFolderId === 'all' ? 'Tutte le Creazioni' : (currentFolder?.name || 'Collezione')}
-          </h2>
-          <p className="text-xs sm:text-sm text-neutral-500 mt-1">
-            Foto caricate direttamente dalle cartelle di Google Drive
-          </p>
+    <div className="mb-12 space-y-6">
+      {/* Intestazione Sezione Ispirata a "WHAT'S ON" di Frans Hals */}
+      <div className="text-center pt-6 pb-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141414] text-[#F5E272] text-[10px] font-black tracking-widest uppercase mb-3">
+          <Flame className="w-3 h-3 text-[#F5E272]" />
+          <span>ARCHIVIO DISPONIBILE ORA</span>
+        </div>
+        <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tight text-[#141414]">
+          {selectedFolderId === 'all'
+            ? "WHAT'S IN THE VAULT"
+            : (currentFolder?.name || 'COLLEZIONE')}
+        </h2>
+        <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#141414]/80 mt-2 max-w-xl mx-auto">
+          Tutti i capi sono pezzi unici d&apos;archivio con spedizione immediata e Garanzia Cliente eBay.
+        </p>
+      </div>
+
+      {/* Barra di Controllo: Cerca, Ordina e Refresh (Tutto in palette Armonica) */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-y-2 border-[#141414]/20 py-4">
+        {/* Input Ricerca nel Vault */}
+        <div className="w-full sm:w-72 relative">
+          <input
+            id="catalog-search-input"
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="CERCA TRA I CAPI..."
+            className="w-full bg-[#FAF6EE] text-[#141414] placeholder-[#141414]/50 border-2 border-[#141414] rounded-full px-4 py-2 text-xs font-bold tracking-wider uppercase focus:outline-none focus:ring-2 focus:ring-[#141414]"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-black text-[#141414] hover:opacity-70"
+            >
+              ✕
+            </button>
+          )}
         </div>
 
-        <div className="flex items-center gap-3 self-start md:self-auto">
-          <div className="flex items-center gap-1.5 text-xs text-neutral-600 bg-neutral-100 rounded-lg px-3 py-2">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-500" />
-            <span className="font-medium">Ordina per:</span>
+        {/* Ordinamento & Refresh */}
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+          <div className="flex items-center gap-2 text-xs font-black tracking-wider uppercase text-[#141414] bg-[#FAF6EE] border-2 border-[#141414] rounded-full px-4 py-2">
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            <span>Ordina:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="bg-transparent font-semibold text-neutral-900 focus:outline-none cursor-pointer"
+              className="bg-transparent font-black text-[#141414] focus:outline-none cursor-pointer uppercase text-xs"
             >
               <option value="default">Consigliati</option>
               <option value="price-asc">Prezzo: Min - Max</option>
@@ -57,64 +84,56 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
           <button
             onClick={() => refreshCatalog()}
             disabled={isLoading}
-            className="p-2 rounded-lg border border-neutral-200 hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900 transition-colors disabled:opacity-50 cursor-pointer"
-            title="Ricarica da Google Drive"
+            className="p-2 rounded-full border-2 border-[#141414] bg-[#141414] text-[#F5E272] hover:scale-105 transition-transform disabled:opacity-50 cursor-pointer shadow-xs"
+            title="Sincronizza Capi Live"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-amber-600' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+      {/* Filtri Categorie Armonizzati (Nessun Arcobaleno, Palette Coerente) */}
+      <div className="flex items-center justify-center flex-wrap gap-2 pt-2">
         <button
           onClick={() => setSelectedFolderId('all')}
-          className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+          className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 border-2 border-[#141414] ${
             selectedFolderId === 'all'
-              ? 'bg-neutral-900 text-white shadow-md'
-              : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+              ? 'bg-[#141414] text-[#F5E272] shadow-md scale-105'
+              : 'bg-[#FAF6EE] text-[#141414] hover:bg-[#141414] hover:text-[#F5E272]'
           }`}
         >
           <span>Tutti i Capi</span>
-          <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${selectedFolderId === 'all' ? 'bg-white/20 text-white' : 'bg-white text-neutral-600'}`}>
+          <span
+            className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+              selectedFolderId === 'all'
+                ? 'bg-[#F5E272] text-[#141414]'
+                : 'bg-[#141414]/15 text-[#141414]'
+            }`}
+          >
             {products.length}
           </span>
         </button>
 
         {folders.map((folder) => {
           const isSelected = selectedFolderId === folder.id;
-          const isServices = folder.id === 'ebay-servizi' || folder.name.toLowerCase().includes('servizi') || folder.name.toLowerCase().includes('web');
-          const isEbayFolder = !isServices && (folder.id === 'ebay-capi' || folder.name.toLowerCase().includes('ebay'));
 
           return (
             <button
               key={folder.id}
               onClick={() => setSelectedFolderId(folder.id)}
-              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 border-2 border-[#141414] ${
                 isSelected
-                  ? isServices
-                    ? 'bg-purple-700 text-white shadow-md'
-                    : isEbayFolder
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-neutral-900 text-white shadow-md'
-                  : isServices
-                  ? 'bg-purple-50 text-purple-900 border border-purple-200 hover:bg-purple-100'
-                  : isEbayFolder
-                  ? 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                  ? 'bg-[#141414] text-[#F5E272] shadow-md scale-105'
+                  : 'bg-[#FAF6EE] text-[#141414] hover:bg-[#141414] hover:text-[#F5E272]'
               }`}
             >
-              {isServices ? (
-                <span className="text-sm">🚀</span>
-              ) : isEbayFolder ? (
-                <ShieldCheck className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-200' : 'text-blue-600'}`} />
-              ) : (
-                <Folder className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-300' : 'text-neutral-400'}`} />
-              )}
               <span>{folder.name}</span>
               {folder.count > 0 && (
                 <span
-                  className={`text-[11px] px-1.5 py-0.5 rounded-full ${
-                    isSelected ? 'bg-white/20 text-white' : 'bg-white text-neutral-600'
+                  className={`text-[10px] px-1.5 py-0.5 rounded-full font-black ${
+                    isSelected
+                      ? 'bg-[#F5E272] text-[#141414]'
+                      : 'bg-[#141414]/15 text-[#141414]'
                   }`}
                 >
                   {folder.count}
@@ -125,22 +144,22 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
         })}
       </div>
 
-      {/* Banner Esplicativo quando è selezionata la categoria Servizi Web */}
-      {(selectedFolderId === 'ebay-servizi' || currentFolder?.name.toLowerCase().includes('servizi')) && (
-        <div className="p-4 sm:p-5 rounded-2xl bg-linear-to-r from-purple-950/10 via-purple-50 to-indigo-50/40 border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Banner Esplicativo Raffinato per eBay (Senza colori sgargianti discordanti) */}
+      {(selectedFolderId === 'ebay-capi' || currentFolder?.name.toLowerCase().includes('ebay')) && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-[#141414] text-[#F5E272] border-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3.5">
-            <div className="p-2.5 bg-purple-700 text-white rounded-xl shrink-0 shadow-xs text-xl">
-              🚀
+            <div className="p-2.5 bg-[#F5E272] text-[#141414] rounded-xl shrink-0 font-black">
+              <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-purple-800 uppercase tracking-wide">
-                <span>Soluzioni Digitali &amp; Sviluppo Web</span>
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#F5E272]/80">
+                <span>Account eBay Ufficiale: newebservices</span>
               </div>
-              <h4 className="text-sm sm:text-base font-bold text-neutral-900 leading-tight">
-                Servizi Web &amp; Web App Professionali
+              <h4 className="text-sm sm:text-base font-black uppercase tracking-tight text-white">
+                Garanzia Cliente eBay 100% Inclusa
               </h4>
-              <p className="text-xs text-neutral-600 mt-0.5 max-w-xl leading-relaxed">
-                Realizziamo siti web vetrina, e-commerce sincronizzati con Drive e web app su misura. Disponibile acquisto protetto su eBay (venditore newebservices).
+              <p className="text-xs text-neutral-300 mt-0.5 max-w-xl font-medium leading-relaxed">
+                Tutti i capi caricati in questa sezione sono protetti dalla Garanzia Ufficiale eBay con rimborso sicuro e spedizione tracciata.
               </p>
             </div>
           </div>
@@ -149,30 +168,30 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
             href={EBAY_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2.5 bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-colors shrink-0 shadow-xs"
+            className="px-5 py-2.5 bg-[#F5E272] hover:bg-white text-[#141414] text-xs font-black uppercase tracking-wider rounded-full flex items-center gap-2 transition-all shrink-0 shadow-md hover:scale-105"
           >
-            <span>Vedi su eBay</span>
+            <span>Negozio Ufficiale eBay</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
       )}
 
-      {/* Banner Esplicativo quando è selezionata una cartella eBay abbigliamento */}
-      {(selectedFolderId === 'ebay-capi' || (currentFolder?.name.toLowerCase().includes('ebay') && selectedFolderId !== 'ebay-servizi')) && (
-        <div className="p-4 sm:p-5 rounded-2xl bg-linear-to-r from-blue-950/10 via-blue-50 to-amber-50/40 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+      {/* Banner Esplicativo Raffinato per Servizi Web */}
+      {(selectedFolderId === 'ebay-servizi' || currentFolder?.name.toLowerCase().includes('servizi')) && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-[#141414] text-[#F5E272] border-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3.5">
-            <div className="p-2.5 bg-blue-600 text-white rounded-xl shrink-0 shadow-xs">
-              <ShieldCheck className="w-5 h-5" />
+            <div className="p-2.5 bg-[#F5E272] text-[#141414] rounded-xl shrink-0 text-xl font-black">
+              🚀
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-800 uppercase tracking-wide">
-                <span>Account eBay Ufficiale: newebservices</span>
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#F5E272]/80">
+                <span>Soluzioni Digitali &amp; Web</span>
               </div>
-              <h4 className="text-sm sm:text-base font-bold text-neutral-900 leading-tight">
-                Capi in Vendita con Garanzia Cliente eBay
+              <h4 className="text-sm sm:text-base font-black uppercase tracking-tight text-white">
+                Servizi Web &amp; Web App Professionali
               </h4>
-              <p className="text-xs text-neutral-600 mt-0.5 max-w-xl leading-relaxed">
-                Tutti i capi caricati in questa sezione sono protetti al 100% dalla Garanzia eBay. Puoi acquistare direttamente tramite il link eBay o aggiungerli al carrello del sito.
+              <p className="text-xs text-neutral-300 mt-0.5 max-w-xl font-medium leading-relaxed">
+                Realizzazione siti vetrina, e-commerce Google Drive e web app custom. Acquisto protetto direttamente su eBay.
               </p>
             </div>
           </div>
@@ -181,9 +200,9 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
             href={EBAY_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-colors shrink-0 shadow-xs"
+            className="px-5 py-2.5 bg-[#F5E272] hover:bg-white text-[#141414] text-xs font-black uppercase tracking-wider rounded-full flex items-center gap-2 transition-all shrink-0 shadow-md hover:scale-105"
           >
-            <span>Negozio Ufficiale eBay</span>
+            <span>Vedi Inserzione eBay</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
