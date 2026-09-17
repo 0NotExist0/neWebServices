@@ -7,9 +7,10 @@ import { Eye, ShoppingBag, Check, ShieldCheck, ExternalLink, Flame } from 'lucid
 
 interface ProductCardProps {
   product: Product;
+  index?: number;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { addToCart, setQuickViewProduct } = useShop();
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0] || 'M');
   const [addedAnimation, setAddedAnimation] = useState(false);
@@ -26,10 +27,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     ? 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80'
     : product.imageUrl;
 
+  // Direzione e ritardo della folata di vento basata sulla posizione della card
+  const windClass = index % 2 === 0 ? 'animate-wind-left' : 'animate-wind-right';
+  const windDelay = `${(index % 12) * 85}ms`;
+
   return (
     <article
       onClick={() => setQuickViewProduct(product)}
-      className="group bg-[#FCFAF7] rounded-2xl overflow-hidden border-2 border-[#141414] shadow-[4px_4px_0px_0px_#141414] hover:shadow-[7px_7px_0px_0px_#141414] hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer relative"
+      style={{ animationDelay: windDelay }}
+      className={`group bg-[#FCFAF7] rounded-2xl overflow-hidden border-2 border-[#141414] shadow-[4px_4px_0px_0px_#141414] hover:shadow-[8px_8px_0px_0px_#141414] hover:-translate-y-2 hover:rotate-[0.5deg] transition-all duration-300 flex flex-col cursor-pointer relative ${windClass}`}
     >
       {/* Immagine Pulita senza badge accavallati che coprono il vestito */}
       <div className="relative aspect-[3/4] bg-neutral-200 overflow-hidden border-b-2 border-[#141414]">
