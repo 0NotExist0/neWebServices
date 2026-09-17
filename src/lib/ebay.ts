@@ -2,13 +2,14 @@ import { Product, DriveFolder } from '@/types/store';
 
 export const EBAY_SELLER_USERNAME = 'newebservices';
 export const EBAY_PROFILE_URL = 'https://www.ebay.it/sch/i.html?_ssn=newebservices';
+export const EBAY_STORE_URL = 'https://www.ebay.it/usr/newebservices/Abbigliamento-e-accessori/_i.html?_sacat=11450';
 
 export const EBAY_FOLDERS: DriveFolder[] = [
   {
     id: 'ebay-capi',
     name: 'Abbigliamento eBay',
     slug: 'abbigliamento-ebay',
-    count: 9,
+    count: 14,
   },
   {
     id: 'ebay-servizi',
@@ -191,6 +192,101 @@ export const INITIAL_EBAY_PRODUCTS: Product[] = [
       'Denim T-shirt uomo nero streetwear girocollo 100% cotone con grafica Swag fronte e retro, taglia M. Stile iconico urbano.',
   },
   {
+    id: 'ebay-287591923164',
+    name: 'Rinascimento camicia uomo L cotone a quadri blu/bianco manica lunga con tasca',
+    price: 35.64,
+    originalPrice: 48.0,
+    folderId: 'ebay-capi',
+    folderName: 'Abbigliamento eBay',
+    imageUrl: 'https://i.ebayimg.com/images/g/cCQAAeSw4Z1qq9JP/s-l1600.jpg',
+    thumbnailUrl: 'https://i.ebayimg.com/images/g/cCQAAeSw4Z1qq9JP/s-l500.jpg',
+    images: ['https://i.ebayimg.com/images/g/cCQAAeSw4Z1qq9JP/s-l1600.jpg'],
+    sizes: ['L'],
+    inStock: true,
+    isNew: true,
+    isSale: true,
+    isEbayItem: true,
+    ebayListingUrl: 'https://www.ebay.it/itm/287591923164',
+    description:
+      'Rinascimento camicia uomo in puro cotone a quadri blu e bianco, manica lunga con tasca frontale, taglia L. Design versatile ed elegante per occasioni casual o formali. In vendita ufficiale su eBay da newebservices con Garanzia Cliente eBay.',
+  },
+  {
+    id: 'ebay-287591941270',
+    name: 'Canada Highway camicia flanella pesante scozzese XL bottoni',
+    price: 24.62,
+    originalPrice: 35.0,
+    folderId: 'ebay-capi',
+    folderName: 'Abbigliamento eBay',
+    imageUrl: 'https://i.ebayimg.com/images/g/pXQAAeSwZlFqq9Qx/s-l1600.jpg',
+    thumbnailUrl: 'https://i.ebayimg.com/images/g/pXQAAeSwZlFqq9Qx/s-l500.jpg',
+    images: ['https://i.ebayimg.com/images/g/pXQAAeSwZlFqq9Qx/s-l1600.jpg'],
+    sizes: ['XL'],
+    inStock: true,
+    isNew: true,
+    isSale: true,
+    isEbayItem: true,
+    ebayListingUrl: 'https://www.ebay.it/itm/287591941270',
+    description:
+      'Canada Highway camicia flanella pesante scozzese taglia XL con chiusura frontale a bottoni. Morbida, calda e resistente, ideale per i mesi freddi in perfetto stile boscaiolo/streetwear. Inserzione protetta su eBay.',
+  },
+  {
+    id: 'ebay-287591971803',
+    name: 'Mastino Jeans Wear Pantaloncini Uomo Denim Blu 46 con Cordoncino 5 Tasche',
+    price: 16.87,
+    originalPrice: 24.0,
+    folderId: 'ebay-capi',
+    folderName: 'Abbigliamento eBay',
+    imageUrl: 'https://i.ebayimg.com/images/g/W6IAAeSwmuBqq9cl/s-l1600.jpg',
+    thumbnailUrl: 'https://i.ebayimg.com/images/g/W6IAAeSwmuBqq9cl/s-l500.jpg',
+    images: ['https://i.ebayimg.com/images/g/W6IAAeSwmuBqq9cl/s-l1600.jpg'],
+    sizes: ['46'],
+    inStock: true,
+    isNew: true,
+    isSale: true,
+    isEbayItem: true,
+    ebayListingUrl: 'https://www.ebay.it/itm/287591971803',
+    description:
+      'Mastino Jeans Wear Pantaloncini Uomo Denim Blu taglia 46 con pratico cordoncino elastico e 5 tasche. Bermuda estivi in jeans confortevoli e resistenti. In vendita su eBay da newebservices con Garanzia Cliente.',
+  },
+  {
+    id: 'ebay-287592007251',
+    name: 'Good & Liu Jeans donna vintage anni 2000 zampa denim blu S strass ricamo',
+    price: 34.12,
+    originalPrice: 48.0,
+    folderId: 'ebay-capi',
+    folderName: 'Abbigliamento eBay',
+    imageUrl: 'https://i.ebayimg.com/images/g/miAAAeSwShxqq9tD/s-l1600.jpg',
+    thumbnailUrl: 'https://i.ebayimg.com/images/g/miAAAeSwShxqq9tD/s-l500.jpg',
+    images: ['https://i.ebayimg.com/images/g/miAAAeSwShxqq9tD/s-l1600.jpg'],
+    sizes: ['S'],
+    inStock: true,
+    isNew: true,
+    isSale: true,
+    isEbayItem: true,
+    ebayListingUrl: 'https://www.ebay.it/itm/287592007251',
+    description:
+      'Good & Liu Jeans donna vintage anni 2000 a zampa in denim blu taglia S, impreziositi da raffinati ricami floreali e strass luminosi. Capo cult Y2K originale con cartellino in vendita ufficiale su eBay.',
+  },
+  {
+    id: 'ebay-287592029281',
+    name: 'X-Cape Pantaloni Donna A Zampa Di Elefante',
+    price: 26.7,
+    originalPrice: 35.0,
+    folderId: 'ebay-capi',
+    folderName: 'Abbigliamento eBay',
+    imageUrl: 'https://i.ebayimg.com/images/g/R84AAeSwFx9qq9zr/s-l1600.jpg',
+    thumbnailUrl: 'https://i.ebayimg.com/images/g/R84AAeSwFx9qq9zr/s-l500.jpg',
+    images: ['https://i.ebayimg.com/images/g/R84AAeSwFx9qq9zr/s-l1600.jpg'],
+    sizes: ['S', 'M', 'L'],
+    inStock: true,
+    isNew: true,
+    isSale: true,
+    isEbayItem: true,
+    ebayListingUrl: 'https://www.ebay.it/itm/287592029281',
+    description:
+      'X-Cape Pantaloni Donna flare a zampa di elefante, taglio comodo e silhouette anni 2000 contemporanea. Inserzione ufficiale eBay dal venditore newebservices con Garanzia Cliente e spedizione tracciata.',
+  },
+  {
     id: 'ebay-287228536484',
     name: '🚀 IL TUO ECONOMICO SITO WEB PROFESSIONALE',
     price: 52.7,
@@ -336,6 +432,157 @@ async function fetchItemsFromBrowseApi(
 }
 
 /**
+ * Estrae i prodotti da risposte HTML di eBay (supporta sia il formato StoreFrontItemCard che s-card)
+ */
+export function parseEbayListingHtml(html: string): Product[] {
+  const scrapedProducts: Product[] = [];
+  const seenIds = new Set<string>();
+
+  // 1. Parser per schede StoreFront (<article data-testid="ig-...)
+  const articleCards = html.split('<article ');
+  if (articleCards.length > 1) {
+    for (let i = 1; i < articleCards.length; i++) {
+      const card = articleCards[i];
+      const idMatch = card.match(/data-testid=["']?ig-([0-9]+)["']?/i);
+      if (!idMatch) continue;
+      const itemId = idMatch[1];
+      if (seenIds.has(itemId)) continue;
+      seenIds.add(itemId);
+
+      let title = '';
+      const watchMatch = card.match(/aria-label="osserva ([^"]+)"/i);
+      if (watchMatch) {
+        title = watchMatch[1].trim();
+      } else {
+        const spanMatch = card.match(/<span[^>]*class="[^"]*(?:title|text)[^"]*"[^>]*>([\s\S]*?)<\/span>/i);
+        if (spanMatch) title = spanMatch[1].replace(/<[^>]+>/g, '').trim();
+      }
+
+      if (!title || title.toLowerCase().includes('shop on ebay')) continue;
+
+      let price: number | undefined = undefined;
+      const priceMatch = card.match(/EUR\s*([0-9]+[.,][0-9]+)/i);
+      if (priceMatch) {
+        price = parseFloat(priceMatch[1].replace(',', '.'));
+      }
+
+      let imageUrl = '';
+      const imgMatch =
+        card.match(/src="?(https:\/\/i\.ebayimg\.com\/images\/g\/[a-zA-Z0-9~_-]+\/s-l[0-9]+\.jpg)/i) ||
+        card.match(/data-src="?(https:\/\/i\.ebayimg\.com\/images\/g\/[a-zA-Z0-9~_-]+\/s-l[0-9]+\.jpg)/i);
+      if (imgMatch) {
+        imageUrl = imgMatch[1].replace(/s-l\d+\.jpg/, 's-l1600.jpg');
+      }
+
+      const isService =
+        title.toLowerCase().includes('sito web') ||
+        title.toLowerCase().includes('web') ||
+        title.toLowerCase().includes('professionale');
+
+      const folderId = isService ? 'ebay-servizi' : 'ebay-capi';
+      const folderName = isService ? 'Servizi Web & App' : 'Abbigliamento eBay';
+
+      scrapedProducts.push({
+        id: `ebay-${itemId}`,
+        name: title.replace(/&amp;/g, '&'),
+        price: price ?? 18.0,
+        originalPrice: price ? Math.round(price * 1.25 * 100) / 100 : undefined,
+        folderId,
+        folderName,
+        imageUrl: imageUrl || 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800',
+        thumbnailUrl: imageUrl ? imageUrl.replace('s-l1600.jpg', 's-l500.jpg') : imageUrl,
+        images: imageUrl ? [imageUrl] : [],
+        sizes: isService ? ['Base', 'Personalizzato'] : ['M', 'L', 'Taglia Unica'],
+        inStock: true,
+        isNew: true,
+        isSale: true,
+        isEbayItem: true,
+        ebayListingUrl: `https://www.ebay.it/itm/${itemId}`,
+        description: isService
+          ? `Realizzazione e fornitura professionale online: ${title}. Inserzione ufficiale eBay con Garanzia Cliente.`
+          : `Capo originale ${title}. Inserzione ufficiale eBay dal venditore newebservices con Garanzia Cliente e spedizione rapida.`,
+      });
+    }
+  }
+
+  // 2. Parser per schede s-card (ricerca standard eBay)
+  const rawCards = html.split('<li class="s-card ');
+  if (rawCards.length > 1) {
+    for (let i = 1; i < rawCards.length; i++) {
+      const card = rawCards[i];
+      const idMatch = card.match(/data-listingid=([0-9]+)/);
+      if (!idMatch) continue;
+      const itemId = idMatch[1];
+      if (seenIds.has(itemId)) continue;
+      seenIds.add(itemId);
+
+      let title = '';
+      const titleMatch = card.match(
+        /class=s-card__title>[\s\S]*?<span class="su-styled-text primary default">([\s\S]*?)<\/span>/
+      );
+      if (titleMatch) {
+        title = titleMatch[1].replace(/<[^>]+>/g, '').trim();
+      } else {
+        const altMatch = card.match(/class=s-card__image[^>]*alt="([^"]+)"/);
+        if (altMatch) {
+          title = altMatch[1].trim();
+        }
+      }
+
+      if (!title || title.toLowerCase().includes('shop on ebay')) continue;
+
+      let price: number | undefined = undefined;
+      const priceMatch = card.match(/class="[^"]*s-card__price">([^<]+)<\/span>/);
+      if (priceMatch) {
+        const numMatch = priceMatch[1].match(/([0-9]+[.,][0-9]+)/);
+        if (numMatch) {
+          price = parseFloat(numMatch[1].replace(',', '.'));
+        }
+      }
+
+      let imageUrl = '';
+      const imgMatch =
+        card.match(/src=(https:\/\/i\.ebayimg\.com\/images\/g\/[^/]+\/s-l\d+\.jpg)/) ||
+        card.match(/data-defer-load=(https:\/\/i\.ebayimg\.com\/images\/g\/[^/]+\/s-l\d+\.jpg)/);
+      if (imgMatch) {
+        imageUrl = imgMatch[1].replace(/s-l\d+\.jpg/, 's-l1600.jpg');
+      }
+
+      const isService =
+        title.toLowerCase().includes('sito web') ||
+        title.toLowerCase().includes('web') ||
+        title.toLowerCase().includes('professionale');
+
+      const folderId = isService ? 'ebay-servizi' : 'ebay-capi';
+      const folderName = isService ? 'Servizi Web & App' : 'Abbigliamento eBay';
+
+      scrapedProducts.push({
+        id: `ebay-${itemId}`,
+        name: title.replace(/&amp;/g, '&'),
+        price: price ?? 18.0,
+        originalPrice: price ? Math.round(price * 1.25 * 100) / 100 : undefined,
+        folderId,
+        folderName,
+        imageUrl: imageUrl || 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800',
+        thumbnailUrl: imageUrl ? imageUrl.replace('s-l1600.jpg', 's-l500.jpg') : imageUrl,
+        images: imageUrl ? [imageUrl] : [],
+        sizes: isService ? ['Base', 'Personalizzato'] : ['M', 'L', 'Taglia Unica'],
+        inStock: true,
+        isNew: true,
+        isSale: true,
+        isEbayItem: true,
+        ebayListingUrl: `https://www.ebay.it/itm/${itemId}`,
+        description: isService
+          ? `Realizzazione e fornitura professionale online: ${title}. Inserzione ufficiale eBay con Garanzia Cliente.`
+          : `Capo originale ${title}. Inserzione ufficiale eBay dal venditore newebservices con Garanzia Cliente e spedizione rapida.`,
+      });
+    }
+  }
+
+  return scrapedProducts;
+}
+
+/**
  * Funzione per estrarre in tempo reale gli articoli da eBay a ogni refresh del sito:
  * 1. Tentativo prioritario tramite eBay Browse REST API (se chiavi configurate)
  * 2. Tentativo tramite scraping HTML diretto o mirror
@@ -373,109 +620,73 @@ export async function getEbayCatalogItems(): Promise<{
     }
   }
 
-  // 2. Tentativo di scraping web con rotazione header
+  // 2. Tentativo di scraping web con rotazione URL ed header
   try {
-    const res = await fetch(EBAY_PROFILE_URL, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
-      },
-      cache: 'no-store',
-    });
+    const urlsToTry = [EBAY_STORE_URL, EBAY_PROFILE_URL];
+    let allScraped: Product[] = [];
 
-    if (res.ok) {
-      const html = await res.text();
-      const rawCards = html.split('<li class="s-card ');
+    for (const url of urlsToTry) {
+      try {
+        const res = await fetch(url, {
+          headers: {
+            'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+            Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7',
+          },
+          cache: 'no-store',
+        });
 
-      if (rawCards.length > 1) {
-        const scrapedProducts: Product[] = [];
-        const seenIds = new Set<string>();
-
-        for (let i = 1; i < rawCards.length; i++) {
-          const card = rawCards[i];
-          const idMatch = card.match(/data-listingid=([0-9]+)/);
-          if (!idMatch) continue;
-          const itemId = idMatch[1];
-          if (seenIds.has(itemId)) continue;
-          seenIds.add(itemId);
-
-          let title = '';
-          const titleMatch = card.match(
-            /class=s-card__title>[\s\S]*?<span class="su-styled-text primary default">([\s\S]*?)<\/span>/
-          );
-          if (titleMatch) {
-            title = titleMatch[1].replace(/<[^>]+>/g, '').trim();
-          } else {
-            const altMatch = card.match(/class=s-card__image[^>]*alt="([^"]+)"/);
-            if (altMatch) {
-              title = altMatch[1].trim();
-            }
+        if (res.ok) {
+          const html = await res.text();
+          const parsed = parseEbayListingHtml(html);
+          if (parsed.length > 0) {
+            allScraped = parsed;
+            break;
           }
-
-          if (!title || title.toLowerCase().includes('shop on ebay')) continue;
-
-          let price: number | undefined = undefined;
-          const priceMatch = card.match(/class="[^"]*s-card__price">([^<]+)<\/span>/);
-          if (priceMatch) {
-            const numMatch = priceMatch[1].match(/([0-9]+[.,][0-9]+)/);
-            if (numMatch) {
-              price = parseFloat(numMatch[1].replace(',', '.'));
-            }
-          }
-
-          let imageUrl = '';
-          const imgMatch =
-            card.match(/src=(https:\/\/i\.ebayimg\.com\/images\/g\/[^/]+\/s-l\d+\.jpg)/) ||
-            card.match(/data-defer-load=(https:\/\/i\.ebayimg\.com\/images\/g\/[^/]+\/s-l\d+\.jpg)/);
-          if (imgMatch) {
-            imageUrl = imgMatch[1].replace(/s-l\d+\.jpg/, 's-l1600.jpg');
-          }
-
-          const isService =
-            title.toLowerCase().includes('sito web') ||
-            title.toLowerCase().includes('web') ||
-            title.toLowerCase().includes('professionale');
-
-          const folderId = isService ? 'ebay-servizi' : 'ebay-capi';
-          const folderName = isService ? 'Servizi Web & App' : 'Abbigliamento eBay';
-
-          scrapedProducts.push({
-            id: `ebay-${itemId}`,
-            name: title.replace(/&amp;/g, '&'),
-            price: price ?? 18.0,
-            originalPrice: price ? Math.round(price * 1.25 * 100) / 100 : undefined,
-            folderId,
-            folderName,
-            imageUrl: imageUrl || 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800',
-            thumbnailUrl: imageUrl ? imageUrl.replace('s-l1600.jpg', 's-l500.jpg') : imageUrl,
-            images: imageUrl ? [imageUrl] : [],
-            sizes: isService ? ['Base', 'Personalizzato'] : ['M', 'L', 'Taglia Unica'],
-            inStock: true,
-            isNew: true,
-            isSale: true,
-            isEbayItem: true,
-            ebayListingUrl: `https://www.ebay.it/itm/${itemId}`,
-            description: isService
-              ? `Realizzazione e fornitura professionale online: ${title}. Inserzione ufficiale eBay con Garanzia Cliente.`
-              : `Capo originale ${title}. Inserzione ufficiale eBay dal venditore newebservices con Garanzia Cliente e spedizione rapida.`,
-          });
         }
+      } catch (innerErr) {
+        console.warn(`Scraping error for ${url}:`, innerErr);
+      }
+    }
 
-        if (scrapedProducts.length > 0) {
-          const clothingCount = scrapedProducts.filter((p) => p.folderId === 'ebay-capi').length;
-          const servicesCount = scrapedProducts.filter((p) => p.folderId === 'ebay-servizi').length;
-
+    if (allScraped.length > 0) {
+      // Unisci con i dati curati di INITIAL_EBAY_PRODUCTS se disponibili
+      const mergedProducts: Product[] = allScraped.map((scraped) => {
+        const initial = INITIAL_EBAY_PRODUCTS.find((p) => p.id === scraped.id);
+        if (initial) {
           return {
-            folders: [
-              { id: 'ebay-capi', name: 'Abbigliamento eBay', slug: 'abbigliamento-ebay', count: clothingCount },
-              { id: 'ebay-servizi', name: 'Servizi Web & App', slug: 'servizi-web-app', count: servicesCount },
-            ],
-            products: scrapedProducts,
+            ...scraped,
+            name: initial.name || scraped.name,
+            price: initial.price || scraped.price,
+            originalPrice: initial.originalPrice || scraped.originalPrice,
+            sizes: initial.sizes || scraped.sizes,
+            description: initial.description || scraped.description,
+            imageUrl: initial.imageUrl || scraped.imageUrl,
+            thumbnailUrl: initial.thumbnailUrl || scraped.thumbnailUrl,
+            images: initial.images && initial.images.length > 0 ? initial.images : scraped.images,
           };
         }
+        return scraped;
+      });
+
+      // Includi anche eventuali prodotti da INITIAL_EBAY_PRODUCTS non presenti (es. Servizi Web)
+      for (const initial of INITIAL_EBAY_PRODUCTS) {
+        if (!mergedProducts.some((p) => p.id === initial.id)) {
+          mergedProducts.push(initial);
+        }
       }
+
+      const clothingCount = mergedProducts.filter((p) => p.folderId === 'ebay-capi').length;
+      const servicesCount = mergedProducts.filter((p) => p.folderId === 'ebay-servizi').length;
+
+      return {
+        folders: [
+          { id: 'ebay-capi', name: 'Abbigliamento eBay', slug: 'abbigliamento-ebay', count: clothingCount },
+          { id: 'ebay-servizi', name: 'Servizi Web & App', slug: 'servizi-web-app', count: servicesCount },
+        ],
+        products: mergedProducts,
+      };
     }
   } catch (err) {
     console.warn('eBay direct fetch failed, falling back to verified listings:', err);
