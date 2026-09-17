@@ -23,12 +23,14 @@ export function parseProductFileName(
   fallbackFolder: string
 ): {
   name: string;
+  baseName: string;
   price: number;
   originalPrice?: number;
   isEbay: boolean;
   ebayListingUrl?: string;
+  photoIndex: number;
 } {
-  const withoutExt = fileName.replace(/\.[a-zA-Z0-9]+$/, '').trim();
+  const withoutExt = fileName.replace(/\.[a-zA-Z0-9]+$/, '').replace(/[.\s]+$/, '').trim();
 
   let price = 49.0;
   let originalPrice: number | undefined = undefined;
@@ -43,7 +45,7 @@ export function parseProductFileName(
     cleanName = cleanName.replace(idMatch[0], '').trim();
   }
 
-  const priceRegex = /[-_–—\s]+(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|euro)?$/i;
+  const priceRegex = /[-_–—\s]+(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|euro|\$|usd)?[.\s]*$/i;
   const match = cleanName.match(priceRegex);
 
   if (match) {
@@ -54,7 +56,7 @@ export function parseProductFileName(
       cleanName = cleanName.replace(match[0], '').trim();
     }
   } else {
-    const euroRegex = /(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur)/i;
+    const euroRegex = /(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|\$|usd)/i;
     const euroMatch = cleanName.match(euroRegex);
     if (euroMatch) {
       const parsed = parseFloat(euroMatch[1].replace(',', '.'));
@@ -76,6 +78,12 @@ export function parseProductFileName(
 
   cleanName = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
 
+  // Riconoscimento numero foto / angolazione per raggruppamento (es. AdventurerCargo1 -> base AdventurerCargo, index 1)
+  const baseRegex = /^(.*?)(?:[_\s-]*\(?([0-9]+)\)?)?$/;
+  const baseMatch = cleanName.match(baseRegex);
+  const baseName = baseMatch && baseMatch[2] ? baseMatch[1].trim() : cleanName;
+  const photoIndex = baseMatch && baseMatch[2] ? parseInt(baseMatch[2], 10) : 0;
+
   if (price >= 60) {
     originalPrice = Math.round(price * 1.25);
   }
@@ -92,11 +100,11 @@ export function parseProductFileName(
     if (ebayItemId) {
       ebayListingUrl = `https://www.ebay.it/itm/${ebayItemId}`;
     } else {
-      ebayListingUrl = `https://www.ebay.it/sch/i.html?_ssn=${ebayUsername}&_nkw=${encodeURIComponent(cleanName)}`;
+      ebayListingUrl = `https://www.ebay.it/sch/i.html?_ssn=${ebayUsername}&_nkw=${encodeURIComponent(baseName)}`;
     }
   }
 
-  return { name: cleanName, price, originalPrice, isEbay, ebayListingUrl };
+  return { name: cleanName, baseName, price, originalPrice, isEbay, ebayListingUrl, photoIndex };
 }
 
 export function getDriveImageUrls(fileId: string) {
@@ -105,6 +113,85 @@ export function getDriveImageUrls(fileId: string) {
     thumbnail: `https://lh3.googleusercontent.com/d/${fileId}=w600`,
     direct: `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
   };
+}
+
+export function groupFilesIntoProducts(
+  files: Array<{ id: string; name: string; createdTime?: string }>,
+  folderId: string,
+  folderName: string
+): Product[] {
+  const productMap = new Map<
+    string,
+    {
+      product: Product;
+      imagesWithOrder: Array<{ index: number; url: string; thumb: string }>;
+    }
+  >();
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const { baseName, price, originalPrice, isEbay, ebayListingUrl, photoIndex } =
+      parseProductFileName(file.name, folderName);
+    const urls = getDriveImageUrls(file.id);
+
+    const groupKey = `${folderId}___${baseName.toLowerCase()}`;
+
+    if (!productMap.has(groupKey)) {
+      const product: Product = {
+        id: file.id,
+        name: baseName,
+        price,
+        originalPrice,
+        folderId,
+        folderName,
+        imageUrl: urls.full,
+        thumbnailUrl: urls.thumbnail,
+        images: [urls.full],
+        secondaryImageUrl: undefined,
+        driveFileId: file.id,
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        inStock: true,
+        isNew: i === 0,
+        isSale: Boolean(originalPrice),
+        isEbayItem: isEbay,
+        ebayListingUrl,
+        description: isEbay
+          ? `Capo originale ${baseName} in vendita ufficiale su eBay (venditore newebservices). Pezzo autentico con Garanzia Cliente eBay e spedizione espressa.`
+          : `Capo della categoria ${folderName}. Tessuto selezionato e rifiniture artigianali.`,
+        createdAt: file.createdTime,
+      };
+
+      productMap.set(groupKey, {
+        product,
+        imagesWithOrder: [{ index: photoIndex, url: urls.full, thumb: urls.thumbnail }],
+      });
+    } else {
+      const entry = productMap.get(groupKey)!;
+      entry.imagesWithOrder.push({ index: photoIndex, url: urls.full, thumb: urls.thumbnail });
+      // Se il file iniziale aveva prezzo di default e questo ne ha uno specifico, aggiorna
+      if (entry.product.price === 49 && price !== 49) {
+        entry.product.price = price;
+        entry.product.originalPrice = originalPrice;
+      }
+      if (!entry.product.ebayListingUrl && ebayListingUrl) {
+        entry.product.ebayListingUrl = ebayListingUrl;
+      }
+    }
+  }
+
+  const result: Product[] = [];
+  for (const [, entry] of productMap) {
+    entry.imagesWithOrder.sort((a, b) => a.index - b.index);
+    const allUrls = entry.imagesWithOrder.map((img) => img.url);
+    entry.product.images = allUrls;
+    entry.product.imageUrl = allUrls[0];
+    if (allUrls.length > 1) {
+      entry.product.secondaryImageUrl = allUrls[1];
+    }
+    result.push(entry.product);
+  }
+
+  return result;
 }
 
 export async function fetchGoogleDriveCatalog(
@@ -182,38 +269,13 @@ export async function fetchGoogleDriveCatalog(
         const rootFiles: Array<{ id: string; name: string; createdTime?: string }> = rootImgData.files || [];
 
         if (rootFiles.length > 0) {
+          const products: Product[] = groupFilesIntoProducts(rootFiles, folderId, rootFolderName || 'Collezione Principale');
           const defaultFolder: DriveFolder = {
             id: folderId,
             name: rootFolderName || 'Collezione Principale',
             slug: slugify(rootFolderName || 'collezione-principale'),
-            count: rootFiles.length,
+            count: products.length,
           };
-
-          const products: Product[] = rootFiles.map((file, idx) => {
-            const { name, price, originalPrice, isEbay, ebayListingUrl } = parseProductFileName(file.name, rootFolderName);
-            const urls = getDriveImageUrls(file.id);
-            return {
-              id: file.id,
-              name,
-              price,
-              originalPrice,
-              folderId: folderId,
-              folderName: defaultFolder.name,
-              imageUrl: urls.full,
-              thumbnailUrl: urls.thumbnail,
-              driveFileId: file.id,
-              sizes: ['XS', 'S', 'M', 'L', 'XL'],
-              inStock: true,
-              isNew: idx < 3,
-              isSale: Boolean(originalPrice),
-              isEbayItem: isEbay,
-              ebayListingUrl,
-              description: isEbay
-                ? 'Capo disponibile all\'acquisto con Garanzia Cliente eBay (venditore: newebservices).'
-                : `Capo della collezione ${defaultFolder.name}.`,
-              createdAt: file.createdTime,
-            };
-          });
 
           return {
             success: true,
@@ -264,40 +326,16 @@ export async function fetchGoogleDriveCatalog(
 
     for (const res of results) {
       const folderSlug = slugify(res.folder.name);
+      const folderProducts = groupFilesIntoProducts(res.files, res.folder.id, res.folder.name);
+
       categories.push({
         id: res.folder.id,
         name: res.folder.name,
         slug: folderSlug,
-        count: res.files.length,
+        count: folderProducts.length,
       });
 
-      for (let i = 0; i < res.files.length; i++) {
-        const file = res.files[i];
-        const { name, price, originalPrice, isEbay, ebayListingUrl } = parseProductFileName(file.name, res.folder.name);
-        const urls = getDriveImageUrls(file.id);
-
-        allProducts.push({
-          id: file.id,
-          name,
-          price,
-          originalPrice,
-          folderId: res.folder.id,
-          folderName: res.folder.name,
-          imageUrl: urls.full,
-          thumbnailUrl: urls.thumbnail,
-          driveFileId: file.id,
-          sizes: ['XS', 'S', 'M', 'L', 'XL'],
-          inStock: true,
-          isNew: i === 0,
-          isSale: Boolean(originalPrice),
-          isEbayItem: isEbay,
-          ebayListingUrl,
-          description: isEbay
-            ? `Capo originale ${name} in vendita ufficiale su eBay (venditore newebservices). Acquisto protetto con Garanzia Cliente eBay e spedizione espressa.`
-            : `Capo della categoria ${res.folder.name}. Tessuto selezionato e rifiniture artigianali.`,
-          createdAt: file.createdTime,
-        });
-      }
+      allProducts.push(...folderProducts);
     }
 
     return {

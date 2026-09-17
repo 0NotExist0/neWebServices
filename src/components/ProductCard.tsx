@@ -36,9 +36,22 @@ export default function ProductCard({ product }: ProductCardProps) {
           src={displayImage}
           alt={product.name}
           onError={() => setImgError(true)}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          className={`w-full h-full object-cover object-center transition-all duration-500 ${
+            product.secondaryImageUrl
+              ? 'group-hover:opacity-0 group-hover:scale-105'
+              : 'group-hover:scale-105'
+          }`}
           loading="lazy"
         />
+
+        {product.secondaryImageUrl && (
+          <img
+            src={product.secondaryImageUrl}
+            alt={`${product.name} - Seconda Anteprima`}
+            className="w-full h-full object-cover object-center absolute inset-0 opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 pointer-events-none"
+            loading="lazy"
+          />
+        )}
 
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start z-10 pointer-events-none">
           {product.isSale && (
@@ -63,19 +76,24 @@ export default function ProductCard({ product }: ProductCardProps) {
               <span>{product.folderName}</span>
             </span>
           )}
+          {product.images && product.images.length > 1 && (
+            <span className="px-2 py-0.5 text-[10px] font-semibold bg-neutral-900/80 backdrop-blur-xs text-white rounded-md shadow-xs">
+              {product.images.length} foto
+            </span>
+          )}
         </div>
 
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
           <button
             type="button"
-            className="pointer-events-auto px-4 py-2 bg-white/95 backdrop-blur-xs text-neutral-900 rounded-full text-xs font-semibold tracking-wide shadow-md flex items-center gap-1.5 hover:bg-neutral-900 hover:text-white transition-colors cursor-pointer"
+            className="pointer-events-auto px-4 py-2 bg-white/95 backdrop-blur-xs text-neutral-900 rounded-full text-xs font-semibold tracking-wide shadow-lg flex items-center gap-1.5 hover:bg-neutral-950 hover:text-white transition-all cursor-pointer transform group-hover:scale-105"
             onClick={(e) => {
               e.stopPropagation();
               setQuickViewProduct(product);
             }}
           >
-            <Eye className="w-3.5 h-3.5" />
-            <span>Anteprima</span>
+            <Eye className="w-3.5 h-3.5 text-amber-600" />
+            <span>Apri Anteprima</span>
           </button>
         </div>
       </div>

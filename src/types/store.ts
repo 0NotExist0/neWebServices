@@ -14,6 +14,8 @@ export interface Product {
   folderName: string;
   imageUrl: string;
   thumbnailUrl: string;
+  images?: string[];
+  secondaryImageUrl?: string;
   driveFileId?: string;
   sizes: string[];
   inStock: boolean;

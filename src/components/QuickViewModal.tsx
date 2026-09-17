@@ -13,6 +13,9 @@ import {
   MessageCircle,
   Clock,
   ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
 } from 'lucide-react';
 
 export default function QuickViewModal() {
@@ -28,6 +31,8 @@ export default function QuickViewModal() {
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdded, setIsAdded] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isZoomOpen, setIsZoomOpen] = useState(false);
 
   useEffect(() => {
     if (quickViewProduct) {
@@ -35,6 +40,8 @@ export default function QuickViewModal() {
       setQuantity(1);
       setIsAdded(false);
       setImgError(false);
+      setActiveImageIndex(0);
+      setIsZoomOpen(false);
     }
   }, [quickViewProduct]);
 
@@ -55,9 +62,14 @@ export default function QuickViewModal() {
   );
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${whatsappMsg}`;
 
-  const displayImage = imgError
+  const allImages =
+    quickViewProduct.images && quickViewProduct.images.length > 0
+      ? quickViewProduct.images
+      : [quickViewProduct.imageUrl];
+
+  const currentImageUrl = imgError
     ? 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80'
-    : quickViewProduct.imageUrl;
+    : allImages[activeImageIndex] || quickViewProduct.imageUrl;
 
   return (
     <div
@@ -76,16 +88,89 @@ export default function QuickViewModal() {
           <X className="w-5 h-5" />
         </button>
 
-        <div className="w-full md:w-1/2 bg-neutral-100 relative aspect-[3/4] md:aspect-auto max-h-80 md:max-h-none overflow-hidden">
-          <img
-            src={displayImage}
-            alt={quickViewProduct.name}
-            onError={() => setImgError(true)}
-            className="w-full h-full object-cover object-center"
-          />
-          {quickViewProduct.isSale && (
-            <div className="absolute top-4 left-4 bg-rose-600 text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-wider shadow-md">
-              In Promozione
+        <div className="w-full md:w-1/2 bg-neutral-900 flex flex-col justify-between relative overflow-hidden">
+          <div className="relative aspect-[3/4] md:aspect-auto md:flex-1 bg-neutral-950 overflow-hidden flex items-center justify-center group">
+            <img
+              src={currentImageUrl}
+              alt={quickViewProduct.name}
+              onError={() => setImgError(true)}
+              className="w-full h-full object-cover object-center cursor-zoom-in transition-transform duration-300 group-hover:scale-105"
+              onClick={() => setIsZoomOpen(true)}
+            />
+
+            {/* Badges */}
+            <div className="absolute top-4 left-4 flex flex-col gap-1.5 z-10 pointer-events-none">
+              {quickViewProduct.isSale && (
+                <div className="bg-rose-600 text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-wider shadow-md">
+                  In Promozione
+                </div>
+              )}
+              {allImages.length > 1 && (
+                <div className="bg-black/75 backdrop-blur-xs text-white text-[11px] font-semibold px-2.5 py-1 rounded-md shadow-xs">
+                  Foto {activeImageIndex + 1} di {allImages.length}
+                </div>
+              )}
+            </div>
+
+            {/* Pulsante Zoom */}
+            <button
+              type="button"
+              onClick={() => setIsZoomOpen(true)}
+              className="absolute top-4 right-14 z-10 p-2 rounded-full bg-black/60 hover:bg-black text-white transition-colors cursor-pointer shadow-md"
+              title="Ingrandisci a schermo intero"
+            >
+              <ZoomIn className="w-4 h-4" />
+            </button>
+
+            {/* Frecce Navigazione Immagini (se più di 1 foto) */}
+            {allImages.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveImageIndex((prev) => (prev > 0 ? prev - 1 : allImages.length - 1));
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-md transition-all cursor-pointer z-10"
+                  aria-label="Foto precedente"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveImageIndex((prev) => (prev < allImages.length - 1 ? prev + 1 : 0));
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/90 hover:bg-white text-neutral-900 shadow-md transition-all cursor-pointer z-10"
+                  aria-label="Foto successiva"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Striscia miniature (Thumbnails Anteprime) */}
+          {allImages.length > 1 && (
+            <div className="p-3 bg-neutral-950 border-t border-neutral-800 flex items-center gap-2 overflow-x-auto">
+              <span className="text-[10px] text-neutral-400 uppercase tracking-wider font-semibold mr-1 shrink-0">
+                Anteprime:
+              </span>
+              {allImages.map((imgUrl, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveImageIndex(idx)}
+                  className={`w-12 h-14 rounded-lg overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                    activeImageIndex === idx
+                      ? 'border-amber-400 scale-105 shadow-md'
+                      : 'border-neutral-700 opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={imgUrl} alt={`Anteprima ${idx + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
             </div>
           )}
         </div>
@@ -255,6 +340,27 @@ export default function QuickViewModal() {
           </div>
         </div>
       </div>
+
+      {/* Lightbox Ingrandimento Anteprima ad Alta Definizione */}
+      {isZoomOpen && (
+        <div
+          className="fixed inset-0 z-60 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 cursor-zoom-out"
+          onClick={() => setIsZoomOpen(false)}
+        >
+          <button
+            onClick={() => setIsZoomOpen(false)}
+            className="absolute top-6 right-6 p-3 rounded-full bg-white/20 hover:bg-white text-white hover:text-black transition-colors cursor-pointer"
+            aria-label="Chiudi Zoom"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <img
+            src={currentImageUrl}
+            alt={`${quickViewProduct.name} - Anteprima HD`}
+            className="max-w-full max-h-[92vh] object-contain rounded-xl shadow-2xl"
+          />
+        </div>
+      )}
     </div>
   );
 }
