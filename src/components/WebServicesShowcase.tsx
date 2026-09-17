@@ -156,7 +156,7 @@ export default function WebServicesShowcase() {
                 Garanzia Cliente eBay &amp; Pagamenti Protetti
               </h4>
               <p className="text-xs text-neutral-300 mt-1 max-w-xl leading-relaxed">
-                Tutti i nostri servizi di sviluppo siti web ed e-commerce possono essere acquistati con la massima serenità tramite l&apos;inserzione ufficiale del nostro account eBay <strong>0not_exist0</strong>.
+                Tutti i nostri servizi di sviluppo siti web ed e-commerce possono essere acquistati con la massima serenità tramite l&apos;inserzione ufficiale del nostro account eBay <strong>newebservices</strong>.
               </p>
             </div>
           </div>

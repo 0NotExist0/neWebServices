@@ -1,9 +1,13 @@
 import { WebService } from '@/types/services';
 
 export const EBAY_STORE_URL =
-  process.env.NEXT_PUBLIC_EBAY_STORE_URL || 'https://www.ebay.it/usr/0not_exist0';
+  process.env.NEXT_PUBLIC_EBAY_STORE_URL ||
+  'https://www.ebay.it/sch/i.html?item=287591702835&rt=nc&_trksid=p4429486.m3561.l161211&_ssn=newebservices';
+
 export const EBAY_LISTING_URL =
-  process.env.NEXT_PUBLIC_EBAY_LISTING_URL || 'https://www.ebay.it/usr/0not_exist0';
+  process.env.NEXT_PUBLIC_EBAY_LISTING_URL || 'https://www.ebay.it/itm/287591702835';
+
+export const EBAY_USERNAME = process.env.NEXT_PUBLIC_EBAY_USERNAME || 'newebservices';
 
 export const WEB_SERVICES: WebService[] = [
   {
@@ -24,6 +28,7 @@ export const WEB_SERVICES: WebService[] = [
       'Statistiche visite integrate',
     ],
     techStack: ['Next.js', 'React', 'Tailwind CSS', 'Vercel'],
+    ebayListingUrl: EBAY_STORE_URL,
     popular: false,
   },
   {
@@ -33,7 +38,7 @@ export const WEB_SERVICES: WebService[] = [
     description:
       'Il sistema rivoluzionario per vendere prodotti online senza pannelli di controllo complicati. Ti basta trascinare le foto nella cartella Google Drive per aggiornare il negozio in tempo reale.',
     startingPrice: 349.0,
-    badge: 'Più Richiesto su eBay',
+    badge: 'Inserzione Ufficiale su eBay',
     deliveryDays: '5 - 7 giorni lavorativi',
     features: [
       'Sincronizzazione automatica con cartelle Google Drive',
@@ -42,9 +47,10 @@ export const WEB_SERVICES: WebService[] = [
       'Carrello laterale interattivo e selettore taglie',
       'Ordini con 1 clic su WhatsApp o form di spedizione',
       'Zero costi mensili di gestione catalogo',
-      'Possibilità di acquisto protetto tramite eBay',
+      'Acquisto protetto con Garanzia Cliente eBay',
     ],
     techStack: ['Next.js 16', 'Google Drive API v3', 'Tailwind CSS', 'WhatsApp API'],
+    ebayListingUrl: EBAY_LISTING_URL,
     popular: true,
   },
   {
@@ -65,6 +71,7 @@ export const WEB_SERVICES: WebService[] = [
       'Supporto e manutenzione tecnica continua',
     ],
     techStack: ['TypeScript', 'Next.js', 'PostgreSQL', 'Prisma', 'Stripe'],
+    ebayListingUrl: EBAY_STORE_URL,
     popular: false,
   },
   {
@@ -85,14 +92,15 @@ export const WEB_SERVICES: WebService[] = [
       'Pannello web per gestire i contenuti dell app',
     ],
     techStack: ['React Native', 'Expo', 'Node.js', 'Firebase'],
+    ebayListingUrl: EBAY_STORE_URL,
     popular: false,
   },
 ];
 
 export const SERVICE_FAQS = [
   {
-    q: 'Come posso acquistare il servizio tramite eBay?',
-    a: 'Puoi acquistare il pacchetto desiderato direttamente tramite la nostra inserzione ufficiale su eBay con Garanzia Cliente eBay e protezione acquisti. Riceverai immediatamente la conferma e ti contatteremo per concordare il design e i dettagli.',
+    q: 'Come posso acquistare il servizio tramite la vostra inserzione eBay?',
+    a: 'Puoi cliccare direttamente sul pulsante "Acquista con Garanzia eBay" per andare all\'inserzione dell\'articolo n. 287591702835 del nostro account newebservices. Il pagamento e la consegna sono tutelati al 100% dalla Garanzia Cliente eBay.',
   },
   {
     q: 'Cosa include l\'e-commerce collegato a Google Drive?',

@@ -64,7 +64,7 @@ export default function WebServicesPage() {
           {/* Badge eBay Verificato */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-medium tracking-wide mb-6 backdrop-blur-xs">
             <ShieldCheck className="w-4 h-4 text-blue-400" />
-            <span>Venditore Ufficiale eBay: <strong>0not_exist0</strong> • Garanzia Cliente eBay</span>
+            <span>Venditore Ufficiale eBay: <strong>newebservices</strong> • Garanzia Cliente eBay</span>
             <a
               href={EBAY_STORE_URL}
               target="_blank"

@@ -104,7 +104,7 @@ export default function Footer() {
                 className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-950/60 hover:bg-blue-900/80 text-blue-200 border border-blue-500/30 transition-colors cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-                <span>Visita Negozio eBay (0not_exist0)</span>
+                <span>Visita Negozio eBay (newebservices)</span>
                 <ExternalLink className="w-2.5 h-2.5" />
               </a>
 
@@ -246,7 +246,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             className="text-blue-400 hover:text-white underline flex items-center gap-1"
           >
-            <span>Negozio eBay: 0not_exist0</span>
+            <span>Negozio eBay: newebservices</span>
             <ExternalLink className="w-3 h-3" />
           </a>
           <span>•</span>

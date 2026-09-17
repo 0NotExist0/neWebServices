@@ -63,7 +63,7 @@ export default function Navbar() {
           className="inline-flex items-center gap-1 text-blue-300 hover:text-white font-semibold underline text-[11px] transition-colors"
         >
           <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-          <span>Negozio Ufficiale su eBay: 0not_exist0</span>
+          <span>Negozio Ufficiale su eBay: newebservices</span>
           <ExternalLink className="w-2.5 h-2.5 opacity-80" />
         </a>
 
