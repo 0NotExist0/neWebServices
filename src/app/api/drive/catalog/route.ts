@@ -15,9 +15,11 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(catalog, {
     headers: {
-      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
-      'CDN-Cache-Control': 'public, s-maxage=120',
-      'Vercel-CDN-Cache-Control': 'public, s-maxage=300',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+      'CDN-Cache-Control': 'no-store',
+      'Vercel-CDN-Cache-Control': 'no-store',
+      'Pragma': 'no-cache',
+      'Expires': '0',
     },
   });
 }

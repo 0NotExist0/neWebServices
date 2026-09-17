@@ -103,12 +103,21 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       if (keyToUse) params.append('apiKey', keyToUse);
       if (folderToUse) params.append('rootFolderId', folderToUse);
 
+      // Cache-busting timestamp per garantire che ogni ricarica della pagina scarichi la lista aggiornata
+      params.append('_t', Date.now().toString());
+
       const qs = params.toString();
       if (qs) {
         url += '?' + qs;
       }
 
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+        },
+      });
       const data: CatalogResponse = await res.json();
 
       setIsDemo(Boolean(data.isDemo));
@@ -143,7 +152,18 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Ricarica subito all'apertura del sito
     refreshCatalog();
+
+    // Auto-aggiornamento immediato quando l'utente torna sulla scheda del browser
+    const handleFocus = () => {
+      refreshCatalog();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const addToCart = (product: Product, size: string, quantity = 1) => {

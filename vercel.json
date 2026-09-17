@@ -42,15 +42,19 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, s-maxage=60, stale-while-revalidate=300"
+          "value": "no-store, no-cache, must-revalidate, max-age=0"
         },
         {
           "key": "CDN-Cache-Control",
-          "value": "public, s-maxage=120"
+          "value": "no-store"
         },
         {
           "key": "Vercel-CDN-Cache-Control",
-          "value": "public, s-maxage=300"
+          "value": "no-store"
+        },
+        {
+          "key": "Pragma",
+          "value": "no-cache"
         }
       ]
     }
