@@ -131,7 +131,7 @@ export async function fetchGoogleDriveCatalog(
     try {
       const metaRes = await fetch(
         `https://www.googleapis.com/drive/v3/files/${folderId}?key=${key}&fields=id,name`,
-        { next: { revalidate: 60 } }
+        { cache: 'no-store' }
       );
       if (metaRes.ok) {
         const metaData = await metaRes.json();
@@ -147,7 +147,7 @@ export async function fetchGoogleDriveCatalog(
     );
     const folderUrl = `https://www.googleapis.com/drive/v3/files?q=${folderQuery}&key=${key}&fields=files(id,name,description)&pageSize=50&orderBy=name`;
 
-    const folderRes = await fetch(folderUrl, { next: { revalidate: 60 } });
+    const folderRes = await fetch(folderUrl, { cache: 'no-store' });
 
     if (!folderRes.ok) {
       const errJson = await folderRes.json().catch(() => ({}));
@@ -175,7 +175,7 @@ export async function fetchGoogleDriveCatalog(
         `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`
       );
       const rootImgUrl = `https://www.googleapis.com/drive/v3/files?q=${rootImagesQuery}&key=${key}&fields=files(id,name,mimeType,thumbnailLink,createdTime)&pageSize=100&orderBy=createdTime desc`;
-      const rootImgRes = await fetch(rootImgUrl, { next: { revalidate: 60 } });
+      const rootImgRes = await fetch(rootImgUrl, { cache: 'no-store' });
 
       if (rootImgRes.ok) {
         const rootImgData = await rootImgRes.json();
@@ -248,7 +248,7 @@ export async function fetchGoogleDriveCatalog(
       const imgUrl = `https://www.googleapis.com/drive/v3/files?q=${imgQuery}&key=${key}&fields=files(id,name,mimeType,thumbnailLink,createdTime)&pageSize=100&orderBy=createdTime desc`;
 
       try {
-        const imgRes = await fetch(imgUrl, { next: { revalidate: 60 } });
+        const imgRes = await fetch(imgUrl, { cache: 'no-store' });
         if (!imgRes.ok) return { folder, files: [] };
         const imgData = await imgRes.json();
         return { folder, files: (imgData.files as Array<{ id: string; name: string; createdTime?: string }>) || [] };
