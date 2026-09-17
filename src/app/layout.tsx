@@ -42,6 +42,10 @@ export const metadata: Metadata = {
   authors: [{ name: "0Not_Exist0" }],
   creator: "0Not_Exist0",
   publisher: "NotExistShoppingPlace",
+  icons: {
+    icon: '/logo-official.jpg',
+    apple: '/logo-official.jpg',
+  },
   openGraph: {
     type: "website",
     locale: "it_IT",
@@ -52,10 +56,10 @@ export const metadata: Metadata = {
       "One Archive, Two Universes: Capi d'archivio esclusivi e sviluppo digitale professionale.",
     images: [
       {
-        url: "https://i.ebayimg.com/images/g/MfwAAeSwsKFqq78v/s-l1600.jpg",
+        url: "/logo-official.jpg",
         width: 1200,
         height: 630,
-        alt: "NotExistShoppingPlace - Official Archive",
+        alt: "Not Exist Online - Official Logo",
       },
     ],
   },
@@ -63,7 +67,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NotExistShoppingPlace | by 0Not_Exist0",
     description: "Capi streetwear unici e servizi web professionali.",
-    images: ["https://i.ebayimg.com/images/g/MfwAAeSwsKFqq78v/s-l1600.jpg"],
+    images: ["/logo-official.jpg"],
   },
 };
 

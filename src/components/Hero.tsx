@@ -19,10 +19,14 @@ export default function Hero() {
     <section className="relative bg-[#F5E272] text-[#141414] pt-12 pb-16 sm:pt-16 sm:pb-24 overflow-hidden border-b-2 border-black/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         
-        {/* Scarcity / Vault Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#141414] text-[#F5E272] text-[11px] font-black uppercase tracking-widest mb-8 shadow-md">
-          <Flame className="w-3.5 h-3.5 text-[#F5E272] animate-bounce" />
-          <span>ARCHIVIO PRIVATO • PEZZI UNICI NON RIPRODUCIBILI</span>
+        {/* Scarcity / Vault Pill with Official Logo */}
+        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#141414] text-[#F5E272] text-[11px] font-black uppercase tracking-widest mb-8 shadow-md border border-black">
+          <img
+            src="/logo-official.jpg"
+            alt="Logo Not Exist Online"
+            className="w-4 h-4 rounded-full object-cover bg-white"
+          />
+          <span>NOT EXIST ONLINE • ARCHIVIO PRIVATO PEZZI UNICI</span>
         </div>
 
         {/* Monumental Hero Headline (Matching "ONE MUSEUM / TWO LOCATIONS" in scale) */}

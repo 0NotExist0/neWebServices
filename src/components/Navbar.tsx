@@ -113,17 +113,26 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Center: Iconic Compact Museum-Style Typography Logo */}
+            {/* Center: Official Logo Image + Iconic Typography */}
             <div className="text-center">
-              <Link href="/" className="inline-block group cursor-pointer focus:outline-none">
-                <div className="font-black text-xl sm:text-2xl md:text-3xl tracking-tighter uppercase leading-[0.88] text-[#141414]">
-                  <div>NOT EXIST</div>
-                  <div className="text-[13px] sm:text-[15px] tracking-widest font-extrabold text-[#141414]/90">
-                    SHOPPING PLACE
-                  </div>
+              <Link href="/" className="inline-flex items-center gap-3 sm:gap-4 group cursor-pointer focus:outline-none text-left">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-black bg-white shadow-md group-hover:scale-105 group-hover:shadow-xl transition-all duration-300 flex items-center justify-center p-1 shrink-0">
+                  <img
+                    src="/logo-official.jpg"
+                    alt="Not Exist Online - Logo Ufficiale"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
-                <div className="text-[9px] sm:text-[10px] tracking-[0.25em] font-black uppercase text-[#141414]/70 mt-1">
-                  BY 0NOT_EXIST0
+                <div>
+                  <div className="font-black text-lg sm:text-2xl md:text-3xl tracking-tighter uppercase leading-[0.88] text-[#141414]">
+                    <div>NOT EXIST</div>
+                    <div className="text-[12px] sm:text-[14px] tracking-widest font-extrabold text-[#141414]/90">
+                      SHOPPING PLACE
+                    </div>
+                  </div>
+                  <div className="text-[8px] sm:text-[9px] tracking-[0.22em] font-black uppercase text-[#141414]/70 mt-0.5">
+                    BY 0NOT_EXIST0
+                  </div>
                 </div>
               </Link>
             </div>
@@ -178,6 +187,19 @@ export default function Navbar() {
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-[#F5E272] border-t border-black/10 px-4 py-6 space-y-4 shadow-xl">
+            <div className="flex items-center gap-3 pb-3 border-b border-black/10">
+              <div className="w-10 h-10 rounded-xl overflow-hidden border border-black bg-white p-0.5 shrink-0 shadow-sm">
+                <img
+                  src="/logo-official.jpg"
+                  alt="Logo Ufficiale"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <div className="font-black text-sm uppercase text-[#141414] leading-tight">NotExistShoppingPlace</div>
+                <div className="text-[10px] font-extrabold text-[#141414]/70 uppercase tracking-wider">Store Ufficiale eBay</div>
+              </div>
+            </div>
             <div className="text-xs font-black uppercase tracking-widest text-[#141414]/70 mb-2">
               Menu Principale
             </div>

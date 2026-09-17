@@ -86,18 +86,26 @@ export default function Footer() {
           
           {/* Brand Colonna */}
           <div className="space-y-4 md:col-span-1">
-            <div className="font-black text-xl tracking-tighter uppercase leading-[0.88] text-white">
-              <div>NOT EXIST</div>
-              <div className="text-xs tracking-widest font-extrabold text-[#F5E272]">
-                SHOPPING PLACE
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/20 bg-white p-1 shrink-0 shadow-md">
+                <img
+                  src="/logo-official.jpg"
+                  alt="Not Exist Online - Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <div className="text-[8px] tracking-[0.2em] font-black uppercase text-neutral-400 mt-1">
-                BY 0NOT_EXIST0
+              <div>
+                <div className="font-black text-xl tracking-tighter uppercase leading-[0.88] text-white">
+                  <div>NOT EXIST</div>
+                  <div className="text-xs tracking-widest font-extrabold text-[#F5E272]">
+                    SHOPPING PLACE
+                  </div>
+                </div>
+                <div className="text-[8px] tracking-[0.2em] font-black uppercase text-neutral-400 mt-0.5">
+                  BY 0NOT_EXIST0
+                </div>
               </div>
             </div>
-            <span className="text-[10px] tracking-[0.2em] font-sans font-medium text-neutral-400 uppercase block -mt-2">
-              by 0Not_Exist0
-            </span>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
               Boutique esclusiva &amp; Studio di Sviluppo Digitale firmato <strong>0Not_Exist0</strong>. Capi selezionati e creazione di siti web ed app su misura.
             </p>

@@ -61,10 +61,15 @@ export default function WebServicesPage() {
         <div className="absolute inset-0 bg-radial-gradient from-amber-500/10 via-transparent to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
-          {/* Badge eBay Verificato */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-medium tracking-wide mb-6 backdrop-blur-xs">
+          {/* Badge eBay Verificato con Logo Ufficiale */}
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-medium tracking-wide mb-6 backdrop-blur-xs shadow-md">
+            <img
+              src="/logo-official.jpg"
+              alt="Not Exist Online - Logo Ufficiale"
+              className="w-5 h-5 rounded-full object-cover bg-white"
+            />
             <ShieldCheck className="w-4 h-4 text-blue-400" />
-            <span>Venditore Ufficiale eBay: <strong>newebservices</strong> • Garanzia Cliente eBay</span>
+            <span>Venditore Ufficiale eBay: <strong>newebservices</strong> (0Not_Exist0)</span>
             <a
               href={EBAY_STORE_URL}
               target="_blank"

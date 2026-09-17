@@ -147,19 +147,24 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
       {/* Banner Esplicativo Raffinato per eBay (Senza colori sgargianti discordanti) */}
       {(selectedFolderId === 'ebay-capi' || currentFolder?.name.toLowerCase().includes('ebay')) && (
         <div className="p-4 sm:p-5 rounded-2xl bg-[#141414] text-[#F5E272] border-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
-          <div className="flex items-center gap-3.5">
-            <div className="p-2.5 bg-[#F5E272] text-[#141414] rounded-xl shrink-0 font-black">
-              <ShieldCheck className="w-6 h-6" />
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-[#F5E272] bg-white p-1 shrink-0 shadow-md">
+              <img
+                src="/logo-official.jpg"
+                alt="Logo newebservices - Not Exist Online"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#F5E272]/80">
-                <span>Account eBay Ufficiale: newebservices</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-[#F5E272]" />
+                <span>Account eBay Ufficiale: newebservices • Not Exist Online</span>
               </div>
               <h4 className="text-sm sm:text-base font-black uppercase tracking-tight text-white">
                 Garanzia Cliente eBay 100% Inclusa
               </h4>
               <p className="text-xs text-neutral-300 mt-0.5 max-w-xl font-medium leading-relaxed">
-                Tutti i capi caricati in questa sezione sono protetti dalla Garanzia Ufficiale eBay con rimborso sicuro e spedizione tracciata.
+                Tutti i capi caricati in questa sezione provengono direttamente dallo store ufficiale eBay con rimborso sicuro e spedizione tracciata.
               </p>
             </div>
           </div>

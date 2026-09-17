@@ -33,9 +33,13 @@ export default function WebServicesShowcase() {
         {/* Intestazione Sezione */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-neutral-900 pb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-semibold tracking-wide mb-3">
-              <Code className="w-3.5 h-3.5 text-amber-400" />
-              <span>Studio Digitale • 0Not_Exist0</span>
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-300 text-xs font-semibold tracking-wide mb-3 border border-amber-500/20">
+              <img
+                src="/logo-official.jpg"
+                alt="Not Exist Online Logo"
+                className="w-4 h-4 rounded-full object-cover bg-white"
+              />
+              <span>NOT EXIST ONLINE • WEB &amp; SHOPPING</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl font-light text-white leading-tight">
               Realizziamo il tuo <span className="italic font-normal text-amber-200">Sito Web o App</span> su misura.
