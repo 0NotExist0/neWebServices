@@ -2,13 +2,18 @@
 
 import React from 'react';
 import { useShop } from '@/context/ShopContext';
+import { EBAY_STORE_URL, EBAY_LISTING_URL } from '@/lib/services-data';
 import {
   HardDrive,
   MessageCircle,
   Truck,
   RotateCcw,
   Clock,
+  Code,
+  ShieldCheck,
+  ExternalLink,
 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Footer() {
   const {
@@ -30,6 +35,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-neutral-950 text-neutral-300 border-t border-neutral-900 pt-16 pb-12">
+      {/* Barra Vantaggi */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 border-b border-neutral-900">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex items-center gap-4">
@@ -43,29 +49,27 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-neutral-900 text-amber-400 rounded-2xl shrink-0">
-              <RotateCcw className="w-6 h-6" />
+            <div className="p-3 bg-neutral-900 text-blue-400 rounded-2xl shrink-0">
+              <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-white">Reso Senza Pensieri</h5>
-              <p className="text-xs text-neutral-400 mt-0.5">14 giorni di tempo per il reso</p>
+              <h5 className="text-sm font-semibold text-white">Venditore Ufficiale eBay</h5>
+              <p className="text-xs text-neutral-400 mt-0.5">Garanzia Cliente &amp; Pagamenti protetti</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="p-3 bg-neutral-900 text-amber-400 rounded-2xl shrink-0">
-              <MessageCircle className="w-6 h-6" />
+              <Code className="w-6 h-6" />
             </div>
             <div>
-              <h5 className="text-sm font-semibold text-white">Assistenza Dedicata</h5>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                {isWhatsAppAvailable ? 'Supporto rapido via WhatsApp' : 'Assistenza ordini e taglie'}
-              </p>
+              <h5 className="text-sm font-semibold text-white">Siti &amp; App su Misura</h5>
+              <p className="text-xs text-neutral-400 mt-0.5">Sviluppo web e e-commerce con Drive</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-neutral-900 text-amber-400 rounded-2xl shrink-0">
+            <div className="p-3 bg-neutral-900 text-emerald-400 rounded-2xl shrink-0">
               <HardDrive className="w-6 h-6" />
             </div>
             <div>
@@ -76,8 +80,11 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Colonne Principali Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          
+          {/* Brand Colonna */}
           <div className="space-y-4 md:col-span-1">
             <span className="font-serif text-2xl font-bold tracking-tight text-white block">
               NotExist<span className="text-amber-400 font-light">ShoppingPlace</span>
@@ -86,9 +93,21 @@ export default function Footer() {
               by 0Not_Exist0
             </span>
             <p className="text-xs text-neutral-400 leading-relaxed font-light">
-              Boutique esclusiva firmata 0Not_Exist0. Capi selezionati con passione e gestiti direttamente dal nostro archivio digitale su Google Drive.
+              Boutique esclusiva &amp; Studio di Sviluppo Digitale firmato <strong>0Not_Exist0</strong>. Capi selezionati e creazione di siti web ed app su misura.
             </p>
-            <div className="pt-2">
+            
+            <div className="pt-2 flex flex-col gap-2">
+              <a
+                href={EBAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-950/60 hover:bg-blue-900/80 text-blue-200 border border-blue-500/30 transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+                <span>Visita Negozio eBay (0not_exist0)</span>
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+
               <button
                 onClick={() => setIsConfigOpen(true)}
                 className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 transition-colors cursor-pointer"
@@ -99,9 +118,10 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Categorie Vestiti */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-              Menu Categorie
+              Collezione Moda
             </h4>
             <ul className="space-y-2 text-xs text-neutral-400">
               <li>
@@ -126,51 +146,115 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Servizi Web & App (Novità) */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-              Servizio Clienti
-            </h4>
+            <div className="flex items-center gap-1.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                Servizi Web &amp; App
+              </h4>
+              <span className="text-[9px] font-bold px-1.5 py-0.2 bg-amber-400 text-neutral-950 rounded-full">
+                ONLINE
+              </span>
+            </div>
             <ul className="space-y-2 text-xs text-neutral-400">
-              <li><span className="hover:text-white transition-colors cursor-pointer">Spedizioni &amp; Tariffe</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer">Politica di Reso</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer">Guida alle Taglie</span></li>
-              <li><span className="hover:text-white transition-colors cursor-pointer">Domande Frequenti (FAQ)</span></li>
+              <li>
+                <Link href="/servizi-web" className="hover:text-white transition-colors flex items-center gap-1.5">
+                  <Code className="w-3 h-3 text-amber-400" />
+                  <span>Tutti i Pacchetti Digitali</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/servizi-web#pacchetti" className="hover:text-white transition-colors">
+                  Siti Web Vetrina &amp; Portfolio
+                </Link>
+              </li>
+              <li>
+                <Link href="/servizi-web#pacchetti" className="hover:text-white transition-colors">
+                  E-Commerce con Sync Drive
+                </Link>
+              </li>
+              <li>
+                <Link href="/servizi-web#pacchetti" className="hover:text-white transition-colors">
+                  Web App &amp; Gestionali Cloud
+                </Link>
+              </li>
+              <li>
+                <Link href="/servizi-web#pacchetti" className="hover:text-white transition-colors">
+                  Applicazioni Mobile iOS &amp; Android
+                </Link>
+              </li>
+              <li>
+                <a
+                  href={EBAY_LISTING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-300 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  <span>Inserzione di Vendita su eBay</span>
+                  <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </li>
             </ul>
           </div>
 
+          {/* Contatti & Assistenza */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-              Contatti Rapidi
+              Contatti &amp; Preventivi
             </h4>
             <p className="text-xs text-neutral-400 leading-relaxed">
-              Hai una domanda su un capo o desideri informazioni sui tuoi ordini?
+              Desideri ordinare un capo o richiedere la realizzazione del tuo sito web personalizzato?
             </p>
-            {isWhatsAppAvailable ? (
-              <a
-                href={`https://wa.me/${cleanPhone}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Scrivici su WhatsApp</span>
-              </a>
-            ) : (
-              <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-400 text-xs font-medium">
-                <Clock className="w-3.5 h-3.5 text-amber-400" />
-                <span>WhatsApp: Coming Soon</span>
-              </div>
-            )}
+
+            <Link
+              href="/servizi-web"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 text-xs font-bold transition-all shadow-xs"
+            >
+              <Code className="w-4 h-4" />
+              <span>Richiedi Preventivo Web/App</span>
+            </Link>
+
+            <div className="pt-1">
+              {isWhatsAppAvailable ? (
+                <a
+                  href={`https://wa.me/${cleanPhone}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Scrivici su WhatsApp</span>
+                </a>
+              ) : (
+                <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-400 text-xs font-medium">
+                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                  <span>WhatsApp: Coming Soon</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Copyright Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-neutral-900 text-center text-xs text-neutral-500 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>&copy; {new Date().getFullYear()} NotExistShoppingPlace by 0Not_Exist0. Tutti i diritti riservati.</p>
-        <p className="flex items-center gap-1.5">
-          <span>Pronto per il deploy su</span>
-          <strong className="text-neutral-300">GitHub &amp; Vercel</strong>
-        </p>
+        <div className="flex items-center gap-3">
+          <a
+            href={EBAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-400 hover:text-white underline flex items-center gap-1"
+          >
+            <span>Negozio eBay: 0not_exist0</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <span>•</span>
+          <p className="flex items-center gap-1.5">
+            <span>Pronto per</span>
+            <strong className="text-neutral-300">GitHub &amp; Vercel</strong>
+          </p>
+        </div>
       </div>
     </footer>
   );

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useShop } from '@/context/ShopContext';
+import { EBAY_STORE_URL } from '@/lib/services-data';
 import {
   ShoppingBag,
   Search,
@@ -10,7 +11,12 @@ import {
   HardDrive,
   Sparkles,
   SlidersHorizontal,
+  Code,
+  ExternalLink,
+  ShieldCheck,
+  ArrowRight,
 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Navbar() {
   const {
@@ -40,16 +46,35 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Banner */}
-      <div className="bg-neutral-900 text-neutral-200 text-xs py-2 px-4 text-center font-medium tracking-wider flex items-center justify-center gap-2 border-b border-neutral-800">
-        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-        <span>Spedizione rapida 24/48h in tutta Italia • Ordini diretti anche via WhatsApp</span>
+      {/* Top Banner Informativo con eBay e Spedizioni */}
+      <div className="bg-neutral-900 text-neutral-200 text-xs py-2 px-4 text-center font-medium tracking-wider flex flex-wrap items-center justify-center gap-2 sm:gap-4 border-b border-neutral-800">
+        <div className="flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <span>NotExistShoppingPlace by 0Not_Exist0</span>
+        </div>
+
+        <span className="hidden sm:inline text-neutral-600">•</span>
+
+        {/* Link eBay Negozio Ufficiale */}
+        <a
+          href={EBAY_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-blue-300 hover:text-white font-semibold underline text-[11px] transition-colors"
+        >
+          <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+          <span>Negozio Ufficiale su eBay: 0not_exist0</span>
+          <ExternalLink className="w-2.5 h-2.5 opacity-80" />
+        </a>
+
+        <span className="hidden sm:inline text-neutral-600">•</span>
+
         <button
           onClick={() => setIsConfigOpen(true)}
-          className="ml-3 underline hover:text-white flex items-center gap-1 text-[11px] opacity-90 transition-opacity cursor-pointer"
+          className="underline hover:text-white flex items-center gap-1 text-[11px] opacity-90 transition-opacity cursor-pointer"
           title="Configura Google Drive"
         >
-          <HardDrive className="w-3 h-3" />
+          <HardDrive className="w-3 h-3 text-amber-400" />
           {isDemo ? 'Configura Drive' : 'Drive Connesso'}
         </button>
       </div>
@@ -72,24 +97,22 @@ export default function Navbar() {
 
             {/* Brand Logo */}
             <div className="flex items-center">
-              <button
-                onClick={() => handleSelectCategory('all')}
-                className="text-left group cursor-pointer focus:outline-hidden"
-              >
+              <Link href="/" className="text-left group cursor-pointer focus:outline-hidden">
                 <div className="flex items-baseline gap-1">
                   <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 group-hover:opacity-80 transition-opacity">
                     NotExist<span className="text-amber-600 font-light">ShoppingPlace</span>
                   </span>
                 </div>
                 <span className="text-[9px] tracking-[0.25em] font-sans font-medium text-neutral-500 uppercase block">
-                  Couture • by 0Not_Exist0
+                  Couture &amp; Tech • by 0Not_Exist0
                 </span>
-              </button>
+              </Link>
             </div>
 
-            {/* Desktop Navigation Menu: cartelle Google Drive come menu */}
+            {/* Desktop Navigation Menu */}
             <nav className="hidden lg:flex items-center space-x-1">
-              <button
+              <Link
+                href="/"
                 onClick={() => handleSelectCategory('all')}
                 className={`px-3 py-2 text-sm font-medium tracking-wide transition-all rounded-md cursor-pointer ${
                   selectedFolderId === 'all'
@@ -98,7 +121,7 @@ export default function Navbar() {
                 }`}
               >
                 Tutti i Capi
-              </button>
+              </Link>
 
               {folders.map((folder) => {
                 const isActive = selectedFolderId === folder.id;
@@ -121,6 +144,30 @@ export default function Navbar() {
                   </button>
                 );
               })}
+
+              {/* Pulsante in evidenza per Servizi Web & App */}
+              <Link
+                href="/servizi-web"
+                className="ml-2 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-neutral-900 bg-linear-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 border border-amber-300/80 rounded-full flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+              >
+                <Code className="w-3.5 h-3.5 text-amber-800" />
+                <span>Servizi Web &amp; App</span>
+                <span className="text-[10px] px-1.5 py-0.2 bg-amber-400/30 text-amber-900 font-bold rounded-full">
+                  NEW
+                </span>
+              </Link>
+
+              {/* Tasto eBay */}
+              <a
+                href={EBAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 hover:bg-blue-50 rounded-full transition-colors flex items-center gap-1"
+                title="Visita il nostro negozio su eBay"
+              >
+                <span>eBay</span>
+                <ExternalLink className="w-3 h-3 text-blue-500" />
+              </a>
             </nav>
 
             {/* Right Icons: Search, Drive Config, Cart */}
@@ -216,12 +263,41 @@ export default function Navbar() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-neutral-100 bg-white px-4 pt-3 pb-6 space-y-1 shadow-lg">
-            <div className="text-xs font-bold text-neutral-400 uppercase tracking-widest px-3 py-2">
-              Menu Categorie (Cartelle Drive)
+          <div className="lg:hidden border-t border-neutral-100 bg-white px-4 pt-3 pb-6 space-y-2 shadow-lg">
+            
+            {/* Sezione Servizi Digitali Mobile */}
+            <div className="p-3 bg-neutral-900 text-white rounded-xl mb-3 space-y-2">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400">
+                Soluzioni Digitali
+              </div>
+              <Link
+                href="/servizi-web"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between text-sm font-semibold text-white hover:text-amber-300"
+              >
+                <div className="flex items-center gap-2">
+                  <Code className="w-4 h-4 text-amber-400" />
+                  <span>Siti Web &amp; App su Misura</span>
+                </div>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <a
+                href={EBAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between text-xs text-blue-300 hover:text-white pt-1 border-t border-neutral-800"
+              >
+                <span>Negozio Ufficiale su eBay</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
 
-            <button
+            <div className="text-xs font-bold text-neutral-400 uppercase tracking-widest px-3 py-1">
+              Collezione Abbigliamento
+            </div>
+
+            <Link
+              href="/"
               onClick={() => handleSelectCategory('all')}
               className={`w-full text-left px-3 py-2.5 rounded-md text-base font-medium flex items-center justify-between cursor-pointer ${
                 selectedFolderId === 'all'
@@ -231,7 +307,7 @@ export default function Navbar() {
             >
               <span>Tutti i Capi</span>
               <span className="text-xs opacity-75">Catalogo</span>
-            </button>
+            </Link>
 
             {folders.map((folder) => (
               <button
@@ -259,7 +335,7 @@ export default function Navbar() {
                 className="w-full text-left px-3 py-2 text-sm text-neutral-600 hover:text-neutral-900 flex items-center gap-2 cursor-pointer"
               >
                 <SlidersHorizontal className="w-4 h-4" />
-                <span>Impostazioni & Chiavi Drive</span>
+                <span>Impostazioni &amp; Chiavi Drive</span>
               </button>
             </div>
           </div>

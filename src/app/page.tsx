@@ -4,6 +4,7 @@ import ProductGrid from '@/components/ProductGrid';
 import QuickViewModal from '@/components/QuickViewModal';
 import CartDrawer from '@/components/CartDrawer';
 import DriveConfigModal from '@/components/DriveConfigModal';
+import WebServicesShowcase from '@/components/WebServicesShowcase';
 import Footer from '@/components/Footer';
 
 export default function Home() {
@@ -14,6 +15,10 @@ export default function Home() {
       <main className="flex-1">
         <ProductGrid />
       </main>
+
+      {/* Vetrina Servizi Web, E-Commerce & Mobile App con Collegamento eBay */}
+      <WebServicesShowcase />
+
       <QuickViewModal />
       <CartDrawer />
       <DriveConfigModal />
