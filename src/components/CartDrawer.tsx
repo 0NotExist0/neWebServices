@@ -58,10 +58,14 @@ export default function CartDrawer() {
     let msg = '*NUOVO ORDINE DA SITO WEB*\n\n';
     msg += '*Articoli nel Carrello:*\n';
     cart.forEach((item, idx) => {
+      const priceText =
+        item.product.price !== undefined
+          ? `${(item.product.price * item.quantity).toFixed(2)} €`
+          : 'Su richiesta';
       msg += `${idx + 1}. *${item.product.name}*\n`;
       msg += `   - Taglia: ${item.size}\n`;
       msg += `   - Quantità: ${item.quantity}\n`;
-      msg += `   - Prezzo: ${(item.product.price * item.quantity).toFixed(2)} €\n`;
+      msg += `   - Prezzo: ${priceText}\n`;
     });
 
     msg += `\n*Totale Capi:* ${cartTotal.toFixed(2)} €`;
@@ -189,7 +193,7 @@ export default function CartDrawer() {
                       <div className="text-xs text-neutral-500 mt-0.5 flex items-center gap-2">
                         <span>Taglia: <strong className="text-neutral-800">{item.size}</strong></span>
                         <span>•</span>
-                        <span>{item.product.price.toFixed(2)} €</span>
+                        <span>{item.product.price !== undefined ? `${item.product.price.toFixed(2)} €` : 'Su richiesta'}</span>
                       </div>
 
                       {item.product.isEbayItem && item.product.ebayListingUrl && (
@@ -226,7 +230,9 @@ export default function CartDrawer() {
 
                         <div className="flex items-center gap-3">
                           <span className="text-sm font-bold text-neutral-950">
-                            {(item.product.price * item.quantity).toFixed(2)} €
+                            {item.product.price !== undefined
+                              ? `${(item.product.price * item.quantity).toFixed(2)} €`
+                              : 'Su richiesta'}
                           </span>
                           <button
                             onClick={() => removeFromCart(item.id)}

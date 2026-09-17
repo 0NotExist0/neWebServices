@@ -57,8 +57,12 @@ export default function QuickViewModal() {
   };
 
   const cleanPhone = (whatsAppNumber || '').replace(/[^0-9]/g, '');
+  const priceDisplay =
+    quickViewProduct.price !== undefined && quickViewProduct.price !== null
+      ? `${quickViewProduct.price.toFixed(2)}€`
+      : 'Su richiesta';
   const whatsappMsg = encodeURIComponent(
-    `Salve! Vorrei maggiori informazioni o ordinare il capo: *${quickViewProduct.name}* (Taglia: ${selectedSize}, Prezzo: ${quickViewProduct.price.toFixed(2)}€) visto sul vostro sito.`
+    `Salve! Vorrei maggiori informazioni o ordinare il capo: *${quickViewProduct.name}* (Taglia: ${selectedSize}, Prezzo: ${priceDisplay}) visto sul vostro sito.`
   );
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${whatsappMsg}`;
 
@@ -195,12 +199,20 @@ export default function QuickViewModal() {
                 {quickViewProduct.name}
               </h2>
               <div className="flex items-baseline gap-3 mt-2">
-                <span className="text-2xl font-bold text-neutral-950">
-                  {quickViewProduct.price.toFixed(2)} €
-                </span>
-                {quickViewProduct.originalPrice && (
-                  <span className="text-sm text-neutral-400 line-through">
-                    {quickViewProduct.originalPrice.toFixed(2)} €
+                {quickViewProduct.price !== undefined && quickViewProduct.price !== null ? (
+                  <>
+                    <span className="text-2xl font-bold text-neutral-950">
+                      {quickViewProduct.price.toFixed(2)} €
+                    </span>
+                    {quickViewProduct.originalPrice && (
+                      <span className="text-sm text-neutral-400 line-through">
+                        {quickViewProduct.originalPrice.toFixed(2)} €
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-sm font-semibold text-neutral-600 bg-neutral-100 px-3 py-1 rounded-lg">
+                    {quickViewProduct.isEbayItem ? 'Vedi prezzo su eBay' : 'Prezzo su richiesta'}
                   </span>
                 )}
               </div>
@@ -278,7 +290,12 @@ export default function QuickViewModal() {
                   className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                 >
                   <span className="font-extrabold tracking-wider">eBay</span>
-                  <span>Acquista con Protezione su eBay • {(quickViewProduct.price * quantity).toFixed(2)} €</span>
+                  <span>
+                    Acquista con Protezione su eBay
+                    {quickViewProduct.price !== undefined && quickViewProduct.price !== null
+                      ? ` • ${(quickViewProduct.price * quantity).toFixed(2)} €`
+                      : ''}
+                  </span>
                   <ExternalLink className="w-4 h-4 opacity-90" />
                 </a>
               </div>
@@ -301,7 +318,12 @@ export default function QuickViewModal() {
               ) : (
                 <>
                   <ShoppingBag className="w-5 h-5" />
-                  <span>Aggiungi al Carrello • {(quickViewProduct.price * quantity).toFixed(2)} €</span>
+                  <span>
+                    Aggiungi al Carrello
+                    {quickViewProduct.price !== undefined && quickViewProduct.price !== null
+                      ? ` • ${(quickViewProduct.price * quantity).toFixed(2)} €`
+                      : ''}
+                  </span>
                 </>
               )}
             </button>

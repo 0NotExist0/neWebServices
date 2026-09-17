@@ -24,7 +24,7 @@ export function parseProductFileName(
 ): {
   name: string;
   baseName: string;
-  price: number;
+  price?: number;
   originalPrice?: number;
   isEbay: boolean;
   ebayListingUrl?: string;
@@ -32,7 +32,7 @@ export function parseProductFileName(
 } {
   const withoutExt = fileName.replace(/\.[a-zA-Z0-9]+$/, '').replace(/[.\s]+$/, '').trim();
 
-  let price = 49.0;
+  let price: number | undefined = undefined;
   let originalPrice: number | undefined = undefined;
   let cleanName = withoutExt;
   let ebayItemId: string | undefined = undefined;
@@ -45,31 +45,39 @@ export function parseProductFileName(
     cleanName = cleanName.replace(idMatch[0], '').trim();
   }
 
-  const priceRegex = /[-_–—\s]+(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|euro|\$|usd)?[.\s]*$/i;
-  const match = cleanName.match(priceRegex);
+  // Prezzo: identificato specificamente vicino al simbolo $ (es. 21.90$, 21$, $21.90) o €
+  const dollarRegex = /(?:[-_–—\s]*)\$?\s*(\d+(?:[.,]\d{1,2})?)\s*\$(?:[.\s]*)/i;
+  const dollarPrefixRegex = /(?:[-_–—\s]*)\$\s*(\d+(?:[.,]\d{1,2})?)(?:[.\s]*)/i;
+  const euroRegex = /(?:[-_–—\s]*)(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|euro)(?:[.\s]*)/i;
 
-  if (match) {
-    const rawPrice = match[1].replace(',', '.');
-    const parsed = parseFloat(rawPrice);
+  const m1 = cleanName.match(dollarRegex);
+  const m2 = cleanName.match(dollarPrefixRegex);
+  const m3 = cleanName.match(euroRegex);
+
+  if (m1) {
+    const parsed = parseFloat(m1[1].replace(',', '.'));
     if (!isNaN(parsed) && parsed > 0) {
       price = parsed;
-      cleanName = cleanName.replace(match[0], '').trim();
+      cleanName = cleanName.replace(m1[0], ' ').trim();
     }
-  } else {
-    const euroRegex = /(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|\$|usd)/i;
-    const euroMatch = cleanName.match(euroRegex);
-    if (euroMatch) {
-      const parsed = parseFloat(euroMatch[1].replace(',', '.'));
-      if (!isNaN(parsed) && parsed > 0) {
-        price = parsed;
-        cleanName = cleanName.replace(euroMatch[0], '').trim();
-      }
+  } else if (m2) {
+    const parsed = parseFloat(m2[1].replace(',', '.'));
+    if (!isNaN(parsed) && parsed > 0) {
+      price = parsed;
+      cleanName = cleanName.replace(m2[0], ' ').trim();
+    }
+  } else if (m3) {
+    const parsed = parseFloat(m3[1].replace(',', '.'));
+    if (!isNaN(parsed) && parsed > 0) {
+      price = parsed;
+      cleanName = cleanName.replace(m3[0], ' ').trim();
     }
   }
 
   cleanName = cleanName
     .replace(/^[\s_-]+|[\s_-]+$/g, '')
     .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
 
   if (!cleanName || cleanName.length < 2) {
@@ -84,7 +92,7 @@ export function parseProductFileName(
   const baseName = baseMatch && baseMatch[2] ? baseMatch[1].trim() : cleanName;
   const photoIndex = baseMatch && baseMatch[2] ? parseInt(baseMatch[2], 10) : 0;
 
-  if (price >= 60) {
+  if (price !== undefined && price >= 60) {
     originalPrice = Math.round(price * 1.25);
   }
 
@@ -167,9 +175,8 @@ export function groupFilesIntoProducts(
       });
     } else {
       const entry = productMap.get(groupKey)!;
-      entry.imagesWithOrder.push({ index: photoIndex, url: urls.full, thumb: urls.thumbnail });
-      // Se il file iniziale aveva prezzo di default e questo ne ha uno specifico, aggiorna
-      if (entry.product.price === 49 && price !== 49) {
+      // Se il prodotto base non aveva prezzo e un altro scatto ce l'ha, assegnalo
+      if (entry.product.price === undefined && price !== undefined) {
         entry.product.price = price;
         entry.product.originalPrice = originalPrice;
       }

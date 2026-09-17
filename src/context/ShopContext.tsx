@@ -184,7 +184,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   };
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const cartTotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const cartTotal = cart.reduce((acc, item) => acc + (item.product.price || 0) * item.quantity, 0);
 
   // Se l'utente attiva il fallback dimostrativo quando il drive è ancora vuoto
   const displayedFolders = isEmptyDrive && showDemoFallback ? DEMO_FOLDERS : folders;

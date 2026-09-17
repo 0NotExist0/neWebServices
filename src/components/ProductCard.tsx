@@ -109,13 +109,21 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="mt-4 pt-3 border-t border-neutral-100">
-          <div className="flex items-baseline gap-2 mb-3">
-            <span className="text-lg font-bold text-neutral-950 font-sans">
-              {product.price.toFixed(2)} €
-            </span>
-            {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-xs text-neutral-400 line-through">
-                {product.originalPrice.toFixed(2)} €
+          <div className="flex items-baseline gap-2 mb-3 min-h-[28px]">
+            {product.price !== undefined && product.price !== null ? (
+              <>
+                <span className="text-lg font-bold text-neutral-950 font-sans">
+                  {product.price.toFixed(2)} €
+                </span>
+                {product.originalPrice && product.originalPrice > product.price && (
+                  <span className="text-xs text-neutral-400 line-through">
+                    {product.originalPrice.toFixed(2)} €
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-xs font-medium text-neutral-500 bg-neutral-100 px-2.5 py-1 rounded-md">
+                {product.isEbayItem ? 'Vedi prezzo su eBay' : 'Prezzo su richiesta'}
               </span>
             )}
           </div>

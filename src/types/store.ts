@@ -8,7 +8,7 @@ export interface DriveFolder {
 export interface Product {
   id: string;
   name: string;
-  price: number;
+  price?: number;
   originalPrice?: number;
   folderId: string;
   folderName: string;

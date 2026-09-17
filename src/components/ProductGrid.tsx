@@ -56,8 +56,8 @@ export default function ProductGrid() {
         return matchesFolder && matchesSearch;
       })
       .sort((a, b) => {
-        if (sortBy === 'price-asc') return a.price - b.price;
-        if (sortBy === 'price-desc') return b.price - a.price;
+        if (sortBy === 'price-asc') return (a.price || 0) - (b.price || 0);
+        if (sortBy === 'price-desc') return (b.price || 0) - (a.price || 0);
         if (sortBy === 'name') return a.name.localeCompare(b.name);
         return 0;
       });
