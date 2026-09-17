@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ShopProvider } from "@/context/ShopContext";
@@ -13,9 +13,58 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#F5E272",
+};
+
 export const metadata: Metadata = {
-  title: "NotExistShoppingPlace | Negozio Vestiti & Moda by 0Not_Exist0",
-  description: "E-commerce ufficiale NotExistShoppingPlace by 0Not_Exist0, sincronizzato in tempo reale con Google Drive.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://newebservices.vercel.app"
+  ),
+  title: {
+    default: "NotExistShoppingPlace | by 0Not_Exist0",
+    template: "%s | NotExistShoppingPlace",
+  },
+  description:
+    "Archivio streetwear, capi sartoriali unici e soluzioni web su misura firmate 0Not_Exist0. Sincronizzato con Google Drive ed eBay official merchant newebservices.",
+  keywords: [
+    "NotExistShoppingPlace",
+    "0Not_Exist0",
+    "newebservices",
+    "streetwear vintage",
+    "capi unici",
+    "ebay boutique",
+    "sviluppo siti web",
+    "e-commerce drive",
+  ],
+  authors: [{ name: "0Not_Exist0" }],
+  creator: "0Not_Exist0",
+  publisher: "NotExistShoppingPlace",
+  openGraph: {
+    type: "website",
+    locale: "it_IT",
+    url: "https://newebservices.vercel.app",
+    siteName: "NotExistShoppingPlace",
+    title: "NotExistShoppingPlace | by 0Not_Exist0",
+    description:
+      "One Archive, Two Universes: Capi d'archivio esclusivi e sviluppo digitale professionale.",
+    images: [
+      {
+        url: "https://i.ebayimg.com/images/g/MfwAAeSwsKFqq78v/s-l1600.jpg",
+        width: 1200,
+        height: 630,
+        alt: "NotExistShoppingPlace - Official Archive",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NotExistShoppingPlace | by 0Not_Exist0",
+    description: "Capi streetwear unici e servizi web professionali.",
+    images: ["https://i.ebayimg.com/images/g/MfwAAeSwsKFqq78v/s-l1600.jpg"],
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +77,7 @@ export default function RootLayout({
       lang="it"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900 selection:bg-amber-200 selection:text-neutral-900">
+      <body className="min-h-full flex flex-col bg-[#F5E272] text-[#141414] selection:bg-[#141414] selection:text-[#F5E272]">
         <ShopProvider>{children}</ShopProvider>
       </body>
     </html>

@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Ottimizzazione per Vercel Edge & Serverless
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+
+  // Vercel Image Optimization
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 86400, // 24 ore di cache su Vercel CDN
     remotePatterns: [
       {
         protocol: "https",
@@ -18,6 +26,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "i.ebayimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.ebayimg.com",
       },
     ],
   },

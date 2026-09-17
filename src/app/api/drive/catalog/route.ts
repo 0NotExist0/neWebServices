@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchGoogleDriveCatalog } from '@/lib/drive';
 
+// Configurazione per Vercel Serverless Function
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+export const maxDuration = 30; // 30 secondi max per chiamate Google Drive / eBay su Vercel
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -9,7 +12,14 @@ export async function GET(request: NextRequest) {
   const rootFolderId = searchParams.get('rootFolderId') || undefined;
 
   const catalog = await fetchGoogleDriveCatalog(apiKey, rootFolderId);
-  return NextResponse.json(catalog);
+
+  return NextResponse.json(catalog, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      'CDN-Cache-Control': 'public, s-maxage=120',
+      'Vercel-CDN-Cache-Control': 'public, s-maxage=300',
+    },
+  });
 }
 
 export async function POST(request: NextRequest) {
