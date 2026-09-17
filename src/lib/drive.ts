@@ -29,6 +29,7 @@ export function parseProductFileName(
   originalPrice?: number;
   isEbay: boolean;
   ebayListingUrl?: string;
+  ebayItemId?: string;
   photoIndex: number;
 } {
   const withoutExt = fileName.replace(/\.[a-zA-Z0-9]+$/, '').replace(/[.\s]+$/, '').trim();
@@ -38,12 +39,15 @@ export function parseProductFileName(
   let cleanName = withoutExt;
   let ebayItemId: string | undefined = undefined;
 
-  // Cerca un eventuale ID oggetto eBay (es. #287591702835 o ebay_287591702835 o - 287591702835)
-  const ebayIdRegex = /(?:ebay|item|id|#)[-_#\s]*(\d{11,14})/i;
-  const idMatch = withoutExt.match(ebayIdRegex);
-  if (idMatch) {
-    ebayItemId = idMatch[1];
-    cleanName = cleanName.replace(idMatch[0], '').trim();
+  // Cerca un ID oggetto eBay numerico esplicito (11-14 cifre, es. #287591702835 o ebay_287591702835 o 287591702835)
+  const explicitIdMatch = withoutExt.match(/(?:ebay|item|id|#)[-_#\s]*(\d{11,14})/i);
+  const standaloneIdMatch = withoutExt.match(/\b(\d{11,14})\b/);
+  if (explicitIdMatch) {
+    ebayItemId = explicitIdMatch[1];
+    cleanName = cleanName.replace(explicitIdMatch[0], '').trim();
+  } else if (standaloneIdMatch) {
+    ebayItemId = standaloneIdMatch[1];
+    cleanName = cleanName.replace(standaloneIdMatch[0], '').trim();
   }
 
   // Prezzo: identificato specificamente vicino al simbolo $ (es. 21.90$, 21$, $21.90) o €
@@ -93,8 +97,9 @@ export function parseProductFileName(
   const baseName = baseMatch && baseMatch[2] ? baseMatch[1].trim() : cleanName;
   const photoIndex = baseMatch && baseMatch[2] ? parseInt(baseMatch[2], 10) : 0;
 
-  if (price !== undefined && price >= 60) {
-    originalPrice = Math.round(price * 1.25);
+  // Calcolo prezzo barrato (price anchoring manipolatorio) su qualsiasi articolo con prezzo
+  if (price !== undefined) {
+    originalPrice = Math.round(price * 1.25 * 100) / 100;
   }
 
   const isEbay =
@@ -113,7 +118,7 @@ export function parseProductFileName(
     }
   }
 
-  return { name: cleanName, baseName, price, originalPrice, isEbay, ebayListingUrl, photoIndex };
+  return { name: cleanName, baseName, price, originalPrice, isEbay, ebayListingUrl, ebayItemId, photoIndex };
 }
 
 export function getDriveImageUrls(fileId: string) {
@@ -124,10 +129,15 @@ export function getDriveImageUrls(fileId: string) {
   };
 }
 
+/**
+ * Raggruppa le foto di Drive e abbina automaticamente gli articoli eBay corrispondenti
+ */
 export function groupFilesIntoProducts(
   files: Array<{ id: string; name: string; createdTime?: string }>,
   folderId: string,
-  folderName: string
+  folderName: string,
+  ebayProducts?: Product[],
+  matchedEbayIds?: Set<string>
 ): Product[] {
   const productMap = new Map<
     string,
@@ -139,18 +149,66 @@ export function groupFilesIntoProducts(
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
-    const { baseName, price, originalPrice, isEbay, ebayListingUrl, photoIndex } =
+    const { baseName, price, originalPrice, isEbay, ebayListingUrl, ebayItemId, photoIndex } =
       parseProductFileName(file.name, folderName);
     const urls = getDriveImageUrls(file.id);
 
     const groupKey = `${folderId}___${baseName.toLowerCase()}`;
 
     if (!productMap.has(groupKey)) {
+      let finalId = file.id;
+      let finalEbayUrl = ebayListingUrl;
+      let finalPrice = price;
+      let finalOrigPrice = originalPrice;
+
+      // Matching intelligente con gli articoli eBay scaricati in tempo reale
+      if (isEbay && ebayProducts && ebayProducts.length > 0) {
+        let matchedEbayItem: Product | undefined;
+
+        if (ebayItemId) {
+          matchedEbayItem = ebayProducts.find((p) => p.id === `ebay-${ebayItemId}` || p.id === ebayItemId);
+        }
+
+        if (!matchedEbayItem) {
+          // Tokenizza il nome in parole chiave significative (es. AdventurerCargo -> ["adventurer", "cargo"])
+          const keywords = baseName
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .toLowerCase()
+            .split(/[^a-z0-9]+/)
+            .filter((w) => w.length >= 4);
+
+          let bestScore = 0;
+          for (const ep of ebayProducts) {
+            const epLower = ep.name.toLowerCase();
+            let score = 0;
+            for (const kw of keywords) {
+              if (epLower.includes(kw)) score++;
+            }
+            if (score > bestScore) {
+              bestScore = score;
+              matchedEbayItem = ep;
+            }
+          }
+        }
+
+        if (matchedEbayItem) {
+          finalId = matchedEbayItem.id;
+          finalEbayUrl = matchedEbayItem.ebayListingUrl;
+          if (finalPrice === undefined && matchedEbayItem.price) {
+            finalPrice = matchedEbayItem.price;
+            finalOrigPrice = matchedEbayItem.originalPrice;
+          }
+          if (matchedEbayIds) {
+            matchedEbayIds.add(matchedEbayItem.id);
+          }
+        }
+      }
+
       const product: Product = {
-        id: file.id,
+        id: finalId,
         name: baseName,
-        price,
-        originalPrice,
+        price: finalPrice,
+        originalPrice: finalOrigPrice,
         folderId,
         folderName,
         imageUrl: urls.full,
@@ -161,9 +219,9 @@ export function groupFilesIntoProducts(
         sizes: ['XS', 'S', 'M', 'L', 'XL'],
         inStock: true,
         isNew: i === 0,
-        isSale: Boolean(originalPrice),
+        isSale: Boolean(finalOrigPrice),
         isEbayItem: isEbay,
-        ebayListingUrl,
+        ebayListingUrl: finalEbayUrl,
         description: isEbay
           ? `Capo originale ${baseName} in vendita ufficiale su eBay (venditore newebservices). Pezzo autentico con Garanzia Cliente eBay e spedizione espressa.`
           : `Capo della categoria ${folderName}. Tessuto selezionato e rifiniture artigianali.`,
@@ -237,13 +295,19 @@ export async function fetchGoogleDriveCatalog(
       // continua con fallback
     }
 
-    // 1. Cerca le sottocartelle della cartella Root (queste comporranno il Menu)
+    // 1. Scarica in parallelo sia le sottocartelle di Google Drive che gli articoli attivi da eBay
+    const ebayDataPromise = getEbayCatalogItems();
+
+    // Cerca le sottocartelle della cartella Root (queste comporranno il Menu)
     const folderQuery = encodeURIComponent(
       `'${folderId}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false`
     );
     const folderUrl = `https://www.googleapis.com/drive/v3/files?q=${folderQuery}&key=${key}&fields=files(id,name,description)&pageSize=50&orderBy=name`;
 
-    const folderRes = await fetch(folderUrl, { cache: 'no-store' });
+    const [folderRes, ebayData] = await Promise.all([
+      fetch(folderUrl, { cache: 'no-store' }),
+      ebayDataPromise,
+    ]);
 
     if (!folderRes.ok) {
       const errJson = await folderRes.json().catch(() => ({}));
@@ -251,7 +315,6 @@ export async function fetchGoogleDriveCatalog(
         errJson?.error?.message ||
         `Errore HTTP ${folderRes.status}: Verificare chiave API e condivisione della cartella.`;
       console.warn('Google Drive API Folder Fetch Error:', errMsg);
-      const ebayData = await getEbayCatalogItems();
       return {
         success: false,
         isDemo: false,
@@ -265,6 +328,7 @@ export async function fetchGoogleDriveCatalog(
 
     const folderData = await folderRes.json();
     const driveSubFolders: Array<{ id: string; name: string }> = folderData.files || [];
+    const matchedEbayIds = new Set<string>();
 
     // Se non ci sono sottocartelle, cerchiamo se ci sono immagini direttamente nella cartella root
     if (driveSubFolders.length === 0) {
@@ -274,14 +338,18 @@ export async function fetchGoogleDriveCatalog(
       const rootImgUrl = `https://www.googleapis.com/drive/v3/files?q=${rootImagesQuery}&key=${key}&fields=files(id,name,mimeType,thumbnailLink,createdTime)&pageSize=100&orderBy=createdTime desc`;
       const rootImgRes = await fetch(rootImgUrl, { cache: 'no-store' });
 
-      const ebayData = await getEbayCatalogItems();
-
       if (rootImgRes.ok) {
         const rootImgData = await rootImgRes.json();
         const rootFiles: Array<{ id: string; name: string; createdTime?: string }> = rootImgData.files || [];
 
         if (rootFiles.length > 0) {
-          const driveProducts: Product[] = groupFilesIntoProducts(rootFiles, folderId, rootFolderName || 'Collezione Principale');
+          const driveProducts: Product[] = groupFilesIntoProducts(
+            rootFiles,
+            folderId,
+            rootFolderName || 'Collezione Principale',
+            ebayData.products,
+            matchedEbayIds
+          );
           const defaultFolder: DriveFolder = {
             id: folderId,
             name: rootFolderName || 'Collezione Principale',
@@ -289,8 +357,9 @@ export async function fetchGoogleDriveCatalog(
             count: driveProducts.length,
           };
 
+          const remainingEbayProducts = ebayData.products.filter((p) => !matchedEbayIds.has(p.id));
           const mergedFolders = [defaultFolder, ...ebayData.folders];
-          const mergedProducts = [...driveProducts, ...ebayData.products];
+          const mergedProducts = [...driveProducts, ...remainingEbayProducts];
 
           return {
             success: true,
@@ -342,7 +411,13 @@ export async function fetchGoogleDriveCatalog(
 
     for (const res of results) {
       const folderSlug = slugify(res.folder.name);
-      const folderProducts = groupFilesIntoProducts(res.files, res.folder.id, res.folder.name);
+      const folderProducts = groupFilesIntoProducts(
+        res.files,
+        res.folder.id,
+        res.folder.name,
+        ebayData.products,
+        matchedEbayIds
+      );
 
       // Includi nel menu la sottocartella se ha capi o se è rilevante
       categories.push({
@@ -355,7 +430,9 @@ export async function fetchGoogleDriveCatalog(
       allProducts.push(...folderProducts);
     }
 
-    const ebayData = await getEbayCatalogItems();
+    // Aggiungi solo i prodotti eBay che non sono già stati abbinati a uno scatto Drive ad alta risoluzione
+    const remainingEbayProducts = ebayData.products.filter((p) => !matchedEbayIds.has(p.id));
+    const finalProducts = [...allProducts, ...remainingEbayProducts];
 
     // Combina le categorie evitando duplicazioni di id
     const finalFolders: DriveFolder[] = [...categories];
@@ -364,8 +441,6 @@ export async function fetchGoogleDriveCatalog(
         finalFolders.push(ef);
       }
     }
-
-    const finalProducts = [...allProducts, ...ebayData.products];
 
     return {
       success: true,
