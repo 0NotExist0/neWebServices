@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, CartItem, DriveFolder, CatalogResponse } from '@/types/store';
 import { DEMO_FOLDERS, DEMO_PRODUCTS } from '@/lib/demo-data';
+import { EBAY_FOLDERS, INITIAL_EBAY_PRODUCTS } from '@/lib/ebay';
 
 interface ShopContextType {
   cart: CartItem[];
@@ -49,8 +50,8 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
-  const [folders, setFolders] = useState<DriveFolder[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [folders, setFolders] = useState<DriveFolder[]>(EBAY_FOLDERS);
+  const [products, setProducts] = useState<Product[]>(INITIAL_EBAY_PRODUCTS);
   const [selectedFolderId, setSelectedFolderId] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isDemo, setIsDemo] = useState(false);
@@ -112,18 +113,16 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
 
       setIsDemo(Boolean(data.isDemo));
       setDriveFolderName(data.folderName || 'Google Drive');
+      setIsEmptyDrive(Boolean(data.isEmptyDrive));
 
-      if (data.isEmptyDrive) {
-        setIsEmptyDrive(true);
-        setFolders([]);
-        setProducts([]);
-      } else if (data.products && data.products.length > 0) {
-        setIsEmptyDrive(false);
+      if (data.products && data.products.length > 0) {
         setFolders(data.folders);
         setProducts(data.products);
+      } else if (data.isEmptyDrive) {
+        setFolders(data.folders || []);
+        setProducts(data.products || []);
       } else {
         // Fallback demo
-        setIsEmptyDrive(false);
         setFolders(DEMO_FOLDERS);
         setProducts(DEMO_PRODUCTS);
         setIsDemo(true);

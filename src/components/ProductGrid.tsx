@@ -66,8 +66,8 @@ export default function ProductGrid() {
   return (
     <section id="catalog-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       
-      {/* 1. Schermata Drive Connesso ma Attualmente Vuoto (Onboarding immediato) */}
-      {isEmptyDrive && !showDemoFallback && (
+      {/* 1. Schermata Drive Connesso quando non ci sono ancora capi (Drive vuoto e nessun prodotto eBay) */}
+      {isEmptyDrive && products.length === 0 && !showDemoFallback && (
         <div className="mb-12 bg-white rounded-3xl border border-neutral-200 p-6 sm:p-10 shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-amber-100/50 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
@@ -184,13 +184,49 @@ export default function ProductGrid() {
         </div>
       )}
 
+      {/* Banner discreto se Drive è collegato ma non ha ancora foto (capi eBay visibili sotto) */}
+      {isEmptyDrive && products.length > 0 && (
+        <div className="mb-8 p-4 rounded-2xl bg-linear-to-r from-emerald-50/70 via-blue-50/70 to-neutral-50 border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping shrink-0" />
+            <div>
+              <p className="font-bold text-neutral-900">
+                Google Drive &amp; eBay Sincronizzati
+              </p>
+              <p className="text-neutral-600 mt-0.5">
+                Stai visualizzando il catalogo attivo di eBay. Quando caricherai nuove foto nella cartella Drive <strong>&ldquo;{driveFolderName}&rdquo;</strong>, appariranno automaticamente qui.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <a
+              href={driveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-2 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <FolderPlus className="w-3.5 h-3.5 text-amber-400" />
+              <span>Apri Cartella Drive</span>
+            </a>
+            <button
+              onClick={() => refreshCatalog()}
+              disabled={isLoading}
+              className="px-3 py-2 border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 rounded-xl font-semibold flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin text-amber-600' : ''}`} />
+              <span>Sincronizza</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Categorie e Filtri */}
       {(products.length > 0 || !isEmptyDrive) && (
         <CategoryFilter sortBy={sortBy} setSortBy={setSortBy} />
       )}
 
       {/* Loading Skeleton */}
-      {isLoading ? (
+      {isLoading && products.length === 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="bg-white rounded-xl border border-neutral-100 overflow-hidden animate-pulse">

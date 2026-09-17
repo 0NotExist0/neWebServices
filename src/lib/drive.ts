@@ -1,5 +1,6 @@
 import { DriveFolder, Product, CatalogResponse } from '@/types/store';
 import { DEMO_FOLDERS, DEMO_PRODUCTS } from './demo-data';
+import { getEbayCatalogItems, EBAY_FOLDERS, INITIAL_EBAY_PRODUCTS } from './ebay';
 
 export function slugify(text: string): string {
   return text
@@ -209,12 +210,13 @@ export async function fetchGoogleDriveCatalog(
   const folderId = rootFolderId || process.env.NEXT_PUBLIC_GOOGLE_DRIVE_ROOT_FOLDER_ID;
 
   if (!key || !folderId || key.trim() === '' || folderId.trim() === '') {
+    const ebayData = await getEbayCatalogItems();
     return {
       success: true,
-      isDemo: true,
-      folders: DEMO_FOLDERS,
-      products: DEMO_PRODUCTS,
-      totalProducts: DEMO_PRODUCTS.length,
+      isDemo: false,
+      folders: ebayData.folders,
+      products: ebayData.products,
+      totalProducts: ebayData.products.length,
       rootFolderId: folderId || '',
     };
   }
@@ -249,12 +251,13 @@ export async function fetchGoogleDriveCatalog(
         errJson?.error?.message ||
         `Errore HTTP ${folderRes.status}: Verificare chiave API e condivisione della cartella.`;
       console.warn('Google Drive API Folder Fetch Error:', errMsg);
+      const ebayData = await getEbayCatalogItems();
       return {
         success: false,
-        isDemo: true,
-        folders: DEMO_FOLDERS,
-        products: DEMO_PRODUCTS,
-        totalProducts: DEMO_PRODUCTS.length,
+        isDemo: false,
+        folders: ebayData.folders,
+        products: ebayData.products,
+        totalProducts: ebayData.products.length,
         error: errMsg,
         rootFolderId: folderId,
       };
@@ -271,45 +274,51 @@ export async function fetchGoogleDriveCatalog(
       const rootImgUrl = `https://www.googleapis.com/drive/v3/files?q=${rootImagesQuery}&key=${key}&fields=files(id,name,mimeType,thumbnailLink,createdTime)&pageSize=100&orderBy=createdTime desc`;
       const rootImgRes = await fetch(rootImgUrl, { cache: 'no-store' });
 
+      const ebayData = await getEbayCatalogItems();
+
       if (rootImgRes.ok) {
         const rootImgData = await rootImgRes.json();
         const rootFiles: Array<{ id: string; name: string; createdTime?: string }> = rootImgData.files || [];
 
         if (rootFiles.length > 0) {
-          const products: Product[] = groupFilesIntoProducts(rootFiles, folderId, rootFolderName || 'Collezione Principale');
+          const driveProducts: Product[] = groupFilesIntoProducts(rootFiles, folderId, rootFolderName || 'Collezione Principale');
           const defaultFolder: DriveFolder = {
             id: folderId,
             name: rootFolderName || 'Collezione Principale',
             slug: slugify(rootFolderName || 'collezione-principale'),
-            count: products.length,
+            count: driveProducts.length,
           };
+
+          const mergedFolders = [defaultFolder, ...ebayData.folders];
+          const mergedProducts = [...driveProducts, ...ebayData.products];
 
           return {
             success: true,
             isDemo: false,
+            isEmptyDrive: false,
             folderName: rootFolderName,
-            folders: [defaultFolder],
-            products,
-            totalProducts: products.length,
+            folders: mergedFolders,
+            products: mergedProducts,
+            totalProducts: mergedProducts.length,
             rootFolderId: folderId,
           };
         }
       }
 
-      // La cartella Google Drive è valida e connessa, ma è attualmente vuota (0 sottocartelle, 0 immagini)
+      // La cartella Google Drive è collegata ma non ha immagini dirette: mostra gli articoli e categorie eBay
       return {
         success: true,
         isDemo: false,
         isEmptyDrive: true,
         folderName: rootFolderName,
-        folders: [],
-        products: [],
-        totalProducts: 0,
+        folders: ebayData.folders,
+        products: ebayData.products,
+        totalProducts: ebayData.products.length,
         rootFolderId: folderId,
       };
     }
 
-    // Abbiamo trovato le sottocartelle: ognuna diventa una voce di menu!
+    // Abbiamo trovato le sottocartelle di Drive: recupera immagini
     const folderPromises = driveSubFolders.map(async (folder) => {
       const imgQuery = encodeURIComponent(
         `'${folder.id}' in parents and mimeType contains 'image/' and trashed = false`
@@ -335,6 +344,7 @@ export async function fetchGoogleDriveCatalog(
       const folderSlug = slugify(res.folder.name);
       const folderProducts = groupFilesIntoProducts(res.files, res.folder.id, res.folder.name);
 
+      // Includi nel menu la sottocartella se ha capi o se è rilevante
       categories.push({
         id: res.folder.id,
         name: res.folder.name,
@@ -345,24 +355,40 @@ export async function fetchGoogleDriveCatalog(
       allProducts.push(...folderProducts);
     }
 
+    const ebayData = await getEbayCatalogItems();
+
+    // Combina le categorie evitando duplicazioni di id
+    const finalFolders: DriveFolder[] = [...categories];
+    for (const ef of ebayData.folders) {
+      if (!finalFolders.some((f) => f.id === ef.id)) {
+        finalFolders.push(ef);
+      }
+    }
+
+    const finalProducts = [...allProducts, ...ebayData.products];
+
     return {
       success: true,
       isDemo: false,
       isEmptyDrive: allProducts.length === 0,
       folderName: rootFolderName,
-      folders: categories,
-      products: allProducts,
-      totalProducts: allProducts.length,
+      folders: finalFolders,
+      products: finalProducts,
+      totalProducts: finalProducts.length,
       rootFolderId: folderId,
     };
   } catch (err: any) {
     console.error('Fetch Drive Catalog Exception:', err);
+    const ebayData = await getEbayCatalogItems().catch(() => ({
+      folders: EBAY_FOLDERS,
+      products: INITIAL_EBAY_PRODUCTS,
+    }));
     return {
       success: false,
-      isDemo: true,
-      folders: DEMO_FOLDERS,
-      products: DEMO_PRODUCTS,
-      totalProducts: DEMO_PRODUCTS.length,
+      isDemo: false,
+      folders: ebayData.folders,
+      products: ebayData.products,
+      totalProducts: ebayData.products.length,
       error: err.message || 'Errore di connessione a Google Drive',
       rootFolderId: folderId,
     };

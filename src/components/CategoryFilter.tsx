@@ -82,22 +82,30 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
 
         {folders.map((folder) => {
           const isSelected = selectedFolderId === folder.id;
-          const isEbayFolder = folder.name.toLowerCase().includes('ebay');
+          const isServices = folder.id === 'ebay-servizi' || folder.name.toLowerCase().includes('servizi') || folder.name.toLowerCase().includes('web');
+          const isEbayFolder = !isServices && (folder.id === 'ebay-capi' || folder.name.toLowerCase().includes('ebay'));
+
           return (
             <button
               key={folder.id}
               onClick={() => setSelectedFolderId(folder.id)}
               className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all cursor-pointer flex items-center gap-2 ${
                 isSelected
-                  ? isEbayFolder
+                  ? isServices
+                    ? 'bg-purple-700 text-white shadow-md'
+                    : isEbayFolder
                     ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-neutral-900 text-white shadow-md'
+                  : isServices
+                  ? 'bg-purple-50 text-purple-900 border border-purple-200 hover:bg-purple-100'
                   : isEbayFolder
                   ? 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'
                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
               }`}
             >
-              {isEbayFolder ? (
+              {isServices ? (
+                <span className="text-sm">🚀</span>
+              ) : isEbayFolder ? (
                 <ShieldCheck className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-200' : 'text-blue-600'}`} />
               ) : (
                 <Folder className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-300' : 'text-neutral-400'}`} />
@@ -117,8 +125,40 @@ export default function CategoryFilter({ sortBy, setSortBy }: CategoryFilterProp
         })}
       </div>
 
-      {/* Banner Esplicativo quando è selezionata una cartella eBay */}
-      {currentFolder?.name.toLowerCase().includes('ebay') && (
+      {/* Banner Esplicativo quando è selezionata la categoria Servizi Web */}
+      {(selectedFolderId === 'ebay-servizi' || currentFolder?.name.toLowerCase().includes('servizi')) && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-linear-to-r from-purple-950/10 via-purple-50 to-indigo-50/40 border border-purple-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="p-2.5 bg-purple-700 text-white rounded-xl shrink-0 shadow-xs text-xl">
+              🚀
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-purple-800 uppercase tracking-wide">
+                <span>Soluzioni Digitali &amp; Sviluppo Web</span>
+              </div>
+              <h4 className="text-sm sm:text-base font-bold text-neutral-900 leading-tight">
+                Servizi Web &amp; Web App Professionali
+              </h4>
+              <p className="text-xs text-neutral-600 mt-0.5 max-w-xl leading-relaxed">
+                Realizziamo siti web vetrina, e-commerce sincronizzati con Drive e web app su misura. Disponibile acquisto protetto su eBay (venditore newebservices).
+              </p>
+            </div>
+          </div>
+
+          <a
+            href={EBAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2.5 bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-colors shrink-0 shadow-xs"
+          >
+            <span>Vedi su eBay</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+      )}
+
+      {/* Banner Esplicativo quando è selezionata una cartella eBay abbigliamento */}
+      {(selectedFolderId === 'ebay-capi' || (currentFolder?.name.toLowerCase().includes('ebay') && selectedFolderId !== 'ebay-servizi')) && (
         <div className="p-4 sm:p-5 rounded-2xl bg-linear-to-r from-blue-950/10 via-blue-50 to-amber-50/40 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div className="p-2.5 bg-blue-600 text-white rounded-xl shrink-0 shadow-xs">

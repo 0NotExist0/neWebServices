@@ -5,7 +5,7 @@ export const EBAY_STORE_URL =
   'https://www.ebay.it/sch/i.html?item=287591702835&rt=nc&_trksid=p4429486.m3561.l161211&_ssn=newebservices';
 
 export const EBAY_LISTING_URL =
-  process.env.NEXT_PUBLIC_EBAY_LISTING_URL || 'https://www.ebay.it/itm/287591702835';
+  process.env.NEXT_PUBLIC_EBAY_LISTING_URL || 'https://www.ebay.it/itm/287228536484';
 
 export const EBAY_USERNAME = process.env.NEXT_PUBLIC_EBAY_USERNAME || 'newebservices';
 
